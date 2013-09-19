@@ -1,0 +1,22 @@
+<?php if (isset($this->error)): ?>
+  <?php if ('development' == APPLICATION_ENV): ?>
+    <?php echo $this->error; ?>
+  <?php else: ?>
+    An error error occured. Please consult the error log file on production server.
+  <?php endif; ?>
+<?php else: ?>
+<ul>
+<?php foreach($this->list_result as $list): ?>
+<?php if($this->id_value != $list['id_list']): ?>
+<li><span>+</span><input <?php if($this->input_type == 'checkbox'): ?>
+                           type="checkbox" name="_id_list[]"
+                         <?php else: ?>
+                           type="radio" name="_id_list"
+                         <?php endif; ?>
+                         value="<?php echo $list['id_list']; ?>" />
+                  <a href="#none" role="treeitem" aria-expanded="false" wairole="treeitem" class="opener" id="p_<?php echo $list['id_list']; ?>"><?php echo $list['title']; ?></a>
+</li>
+<?php endif; ?>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>

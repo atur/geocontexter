@@ -1,0 +1,29 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Attributes of group: <?php echo $escape->escapeHtml($this->attribute_group_name); ?></h1>
+
+    <div>&nbsp;</div>
+
+    <?php if(count($attribute_result) > 0): ?>
+    <ul class="attribute-group-list">
+    <?php foreach( $attribute_result as $attribute): ?>
+    <li><a title="move attribute <?php  echo $escape->escapeHtmlAttr($attribute['attribute_name']); ?> up" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-attributes/index/id_group/<?php  echo $attribute['id_group']; ?>/id_attribute/<?php  echo $attribute['id_attribute']; ?>/moveUp/1">&uarr;</a>
+        <a title="move attribute <?php  echo $escape->escapeHtmlAttr($attribute['attribute_name']); ?> down" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-attributes/index/id_group/<?php  echo $attribute['id_group']; ?>/id_attribute/<?php  echo $attribute['id_attribute']; ?>/moveDown/1">&darr;</a>
+        <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-edit/index/id_group/<?php  echo $attribute['id_group']; ?>/id_attribute/<?php  echo $attribute['id_attribute']; ?>"><?php  echo $escape->escapeHtml($attribute['attribute_name']); ?></a> <span class="action">(<?php  echo $escape->escapeHtml($attribute['attribute_type']); ?><?php if($attribute['multi_value'] == 'TRUE'): ?> multi<?php endif; ?>)</span>
+        <?php if(true !== $disableDeleteLink): ?><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-attributes/delete/id_group/<?php  echo $attribute['id_group']; ?>/id_attribute/<?php  echo $attribute['id_attribute']; ?>"><span class="action">delete</span></a><?php endif; ?>
+    </li>
+    <?php endforeach; ?>
+    </ul>
+    <?php else: ?>
+    <p>No attribute for this group defined yet.</p>
+    <?php endif; ?>
+
+  </div>
+  <div class="c25r right_navigation">                               
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_attribute_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>

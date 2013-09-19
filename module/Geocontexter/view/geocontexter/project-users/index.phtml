@@ -1,0 +1,99 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    $(".add_project_user").click(function(){
+      new_window = window.open("<?php echo $this->baseUrl(); ?>/<?php echo $this->adminPageToken; ?>/geocontexter/user-select/index/callback_num/<?php echo $this->project_users_callback_number; ?>",
+                               "Users",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+
+    $('.remove_project_user').toggle(function() {
+      $('.delete_project_user').show();
+    }, function() {
+      $('.delete_project_user').hide();
+    });
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Users of project "<?php echo $this->escape($this->project_result['title']); ?>"</h1>
+
+    <?php if(count($this->error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($this->error as $error): ?>
+            <h3><?php echo $this->escape($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $this->baseUrl(); ?>/<?php echo $this->adminAreaToken; ?>/geocontexter/project-users/update" accept-charset="utf-8">
+
+    <input type="hidden" name="id_project" value="<?php echo $this->project_result['id_project']; ?>" />
+
+    <ul class="ul-form">
+        <li class="item_label"><h2><label>Project users:</label></h2></li>
+        <li class="item_content">
+            <div class="node-branch-tree-content">
+            <ul id="node-branch-tree">
+            <?php foreach( $this->users_result as $user): ?>
+                <li><input type="checkbox"
+                                  style="display:none;"
+                                  class="delete_project_user"
+                                  name="delete_id_user[]"
+                                  value="<?php echo $user['id_user']; ?>"
+                                  title="check to delete" />
+                                  <?php echo $user['user_lastname']; ?> <?php echo $user['user_forename']; ?> (<?php echo $user['user_login']; ?>)
+                </li>
+            <?php endforeach; ?>
+            </ul>
+            </div>
+
+            <a href="#none" class="add_project_user">add project user</a>
+            <?php if(count($this->users_result) > 0): ?>
+              &nbsp;&nbsp;&nbsp;&nbsp;<a href="#none" class="remove_project_user">remove project user</a>
+            <?php endif; ?>
+        </li>
+    </ul>
+
+    <ul class="ul-form">
+        <li class="item_label"><h2><label for="submit" id="sub">Apply changes or go back to project editor:</label></h2></li>
+        <li class="item_content">
+
+        <?php if(count($this->users_result) > 0): ?>
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="add"
+                   id="submit"
+                   value="Apply" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php endif; ?>
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   id="cancel"
+                   value="Back" />
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php echo $this->partial('_project_navigation.phtml',
+                                'geocontexter',
+                                $this->partialData); ?>
+  </div>
+</div>
+
+

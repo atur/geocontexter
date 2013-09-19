@@ -1,0 +1,64 @@
+<?php if (isset($this->error)): ?>
+  <?php if ('development' == APPLICATION_ENV): ?>
+    <?php echo $this->error; ?>
+  <?php else: ?>
+    An error error occured. Please consult the error log file on production server.
+  <?php endif; ?>
+<?php else: ?>
+<div class="new" aria-live="assertive">
+<h2 class="attribute_additional_head">Additional attributes</h2>
+<?php $tabindex = 7; ?>
+<input type="hidden" name="attribute_id_group" id="attribute_id_group" value="<?php echo $escape->escapeHtmlAttr($this->id_group); ?>" />
+<ul class="ul-form">
+<?php foreach($this->attribute_result as $attr): ?>
+<li class="item_label new">
+  <h2>
+    <label for="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>" id="agroup<?php echo $tabindex; ?>">
+    <?php echo $escape->escapeHtml($attr['attribute_title']); ?>
+    <?php if(!empty($attr['attribute_unit'])): ?> (<?php echo $escape->escapeHtmlAttr($attr['attribute_unit']); ?>)<?php endif; ?>
+    <?php if($attr['multi_value']==TRUE): ?> (multi value)<?php endif; ?>:
+    </label>
+  </h2>
+</li>
+<li class="item_content new">
+<?php if($attr['multi_value']==TRUE): ?>
+  <textarea name="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+         id="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+         tabindex="<?php echo $tabindex; ?>"
+         <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $tabindex; ?>"
+         type="text"
+         size="40"
+         rows="8"><?php if($attr['value'] != NULL): ?><?php foreach($attr['value'] as $value): ?><?php echo $escape->escapeHtml($value); ?><?php endforeach; ?><?php endif; ?></textarea>
+<?php elseif($attr['attribute_type']=='varchar10000'): ?>
+  <textarea name="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+      id="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+      aria-labelledby="agroup<?php echo $tabindex; ?>"
+      <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+      tabindex="<?php echo $tabindex; ?>"
+      cols="50"
+      rows="5"><?php echo $escape->escapeHtml($this->rel_attribute[$attr['attribute_name']]); ?></textarea>
+<?php elseif($attr['attribute_type']!='boolean'): ?>
+  <input name="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+         id="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+         tabindex="<?php echo $tabindex; ?>"
+         <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $tabindex; ?>"
+         type="text"
+         size="40"
+         maxlength="1000"
+         value="<?php echo $this->rel_attribute[$attr['attribute_name']]; ?>" />
+<?php else: ?>
+  <input name="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+         id="a_<?php echo $escape->escapeHtmlAttr($attr['attribute_name']); ?>"
+         tabindex="<?php echo $tabindex; ?>"
+         <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $tabindex; ?>"
+         type="checkbox"
+         value="true" />
+<?php endif; ?>
+</li><?php $tabindex++; ?>
+<?php endforeach; ?>
+</ul>
+<div>
+<?php endif; ?>

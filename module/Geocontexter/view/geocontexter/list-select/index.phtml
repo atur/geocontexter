@@ -1,0 +1,131 @@
+<script type="text/javascript">
+
+<?php if(isset($this->close)): ?>
+
+window.opener.location.href = '<?php echo $this->opener_url; ?>';
+self.close();
+
+<?php else: ?>
+
+ $(document).ready(function() {
+
+    $('#loading').hide();
+
+    $('')
+        $('#loading')
+        .ajaxStart(function() {
+        $(this).show();
+        }).ajaxStop(function() {
+        $(this).hide();
+        });
+
+    var opener = [];
+    var closer = [];
+
+    $('#loading').hide();
+    $("a.opener").live('click', function(){
+
+        var id_parent = $(this).attr("id").replace("p_","");
+
+        if(closer[id_parent])
+        {
+            $('#p_' + id_parent).next("ul").slideDown("slow");
+            closer[id_parent] = null;
+            opener[id_parent] = true;
+            $('#p_' + id_parent).attr("aria-expanded", "true");
+            $('#p_' + id_parent).prev().prev("span").text("- ");
+            return;
+        }
+
+        if(opener[id_parent])
+        {
+            closer[id_parent] = true;
+            $('#p_' + id_parent).next("ul").slideUp("slow");
+            $('#p_' + id_parent).attr("aria-expanded", "false");
+            $('#p_' + id_parent).prev().prev("span").text("+ ");
+            opener[id_parent] = null;
+            return;
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/ajax-list-get-childs-html",
+          data: ({id_parent  : id_parent,
+                  id_list    : "<?php echo $this->id_list; ?>",
+                  input_type : "<?php echo $this->input_type; ?>",
+                  id_value   : "<?php echo $this->id_value; ?>"}),
+          success: function(data) {
+             $('#p_' + id_parent).attr("aria-expanded", "true");
+             $('#p_' + id_parent).prev().prev("span").text("- ");
+             $('#p_' + id_parent).after(data).slideDown("slow");
+             opener[id_parent] = true;
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+    });
+
+ });
+
+<?php endif; ?>
+
+</script>
+
+<form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list-select/submit" accept-charset="utf-8">
+
+<input type="hidden" name="callback_num" value="<?php echo $this->callback_num; ?>" />
+
+<div class="page2">
+
+<div class="floatbox">
+
+<h2 class="page2_header">Select list</h2>
+</div>
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="submit
+                   id="submit"
+                   value="Submit" />
+
+<div id="tree">
+<ul role="tree" aria-expanded="true" wairole="tree">
+<li><input <?php if($this->input_type == 'checkbox'): ?>
+                           type="checkbox" name="_id_list[]"
+                         <?php else: ?>
+                           type="radio" name="_id_list"
+                         <?php endif; ?>
+                           value="0" />
+        <a href="#none" role="treeitem" aria-expanded="true" wairole="treeitem">Root</a>
+
+  <ul aria-expanded="false">
+  <?php foreach($this->list_result as $list): ?>
+  <?php if($this->id_value != $list['id_list']): ?>
+  <li><span>+</span><input <?php if($this->input_type == 'checkbox'): ?>
+           type="checkbox" name="_id_list[]"
+         <?php else: ?>
+           type="radio" name="_id_list"
+         <?php endif; ?>
+           value="<?php echo $escape->escapeHtmlAttr($list['id_list']); ?>" />
+        <a href="#none" role="treeitem" aria-expanded="false" wairole="treeitem" class="opener" id="p_<?php echo $escape->escapeHtmlAttr($list['id_list']); ?>"><?php echo $escape->escapeHtml($list['title']); ?></a>
+  </li>
+  <?php endif; ?>
+  <?php endforeach; ?>
+  </ul>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="submit
+                   id="submit"
+                   value="Submit" />
+
+</form>

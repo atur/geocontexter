@@ -1,0 +1,113 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Edit attribute group: </h1>
+ 
+    <div>&nbsp;</div>
+
+    <?php if(count($this->error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($this->error as $error): ?>
+            <h3><?php echo $escape->escapeHtml($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-edit/update" accept-charset="utf-8">
+    <input type="hidden" name="id_group" value="<?php echo $id_group; ?>" />
+    <ul class="ul-form" role="slider">
+    
+        <?php $tabindex = 1; ?> 
+
+    <?php /* only show button if no associated content to this group  */ ?>       
+    <?php if(false === $showAreaList): ?>  
+        <li class="item_label"><h2><label for="attribute_group_id_table" id="is">Attribute group area:</label></h2></li>
+        <li class="item_content">
+                    <select name="attribute_group_id_table" id="attribute_group_id_table" size="1" tabindex="<?php echo $tabindex++; ?>">
+                    <option value="1"<?php if($attribute_group_id_table==1): ?> selected="selected" class="selected"<?php endif; ?>>Record&nbsp;&nbsp;</option>
+                    <option value="2"<?php if($attribute_group_id_table==2): ?> selected="selected" class="selected"<?php endif; ?>>List&nbsp;&nbsp;</option>
+                    <option value="3"<?php if($attribute_group_id_table==3): ?> selected="selected" class="selected"<?php endif; ?>>Item&nbsp;&nbsp;</option>
+                    <option value="4"<?php if($attribute_group_id_table==4): ?> selected="selected" class="selected"<?php endif; ?>>Keyword&nbsp;&nbsp;</option>
+                    </select>
+        </li>
+        <?php endif; ?>
+
+        <li class="item_label"><h2><label for="attribute_group_name" id="agn">Attribute group name:</label></h2></li>
+        <li class="item_content">
+                <input aria-required="true" 
+                       aria-labelledby="agn"
+                       name="attribute_group_name" 
+                       id="attribute_group_name" 
+                       tabindex="<?php echo $tabindex++; ?>"
+                       type="text" 
+                       size="40" 
+                       maxlength="255" 
+                       value="<?php echo $escape->escapeHtmlAttr($attribute_group_name); ?>" />
+        </li>
+        
+        <li class="item_label"><h2><label for="attribute_group_id_status" id="ags">Attribute status:</label></h2></li>
+        <li class="item_content">
+                <select name="attribute_group_id_status" id="attribute_group_id_status" size="1">
+                <option value="100"<?php if($attribute_group_id_status===100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+                <option value="200"<?php if($attribute_group_id_status===200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+                </select>
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_group_description" id="agd">Attribute group description:</label></h2></li>
+        <li class="item_content">
+                <textarea name="attribute_group_description" 
+                          id="attribute_group_description" 
+                          aria-labelledby="agd"
+                          tabindex="<?php echo $tabindex++; ?>"
+                          cols="50" 
+                          rows="5"><?php echo $escape->escapeHtmlAttr($attribute_group_description); ?></textarea>
+        </li>
+
+        <li class="item_label"><h2><label for="submit" id="sub">Update, cancel or delete:</label></h2></li>
+        <li class="item_content">
+            <input role="button" 
+                   aria-labelledby="sub"
+                   tabindex="<?php echo $tabindex++; ?>"
+                   type="submit" 
+                   name="update" 
+                   id="submit" 
+                   value="Update" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+
+            <input role="button" 
+                   tabindex="<?php echo $tabindex++; ?>"
+                   aria-labelledby="sub"
+                   type="submit" 
+                   name="cancel" 
+                   id="cancel" 
+                   value="Cancel" />
+                   
+            <?php /* only show button if no associated content to this group  */ ?>       
+            <?php if(false === $showDeleteButton): ?>       
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  
+
+            <input role="button" 
+                   tabindex="<?php echo $tabindex++; ?>"
+                   aria-labelledby="sub"
+                   type="submit" 
+                   name="delete" 
+                   id="delete" 
+                   value="Delete" />
+            <?php endif; ?> 
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+  
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_attribute_group_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>

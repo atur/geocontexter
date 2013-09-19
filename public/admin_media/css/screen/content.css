@@ -1,0 +1,602 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) Uniform design of standard content elements
+ * (de) Einheitliche Standardformatierungen für die wichtigten Inhalts-Elemente
+ *
+ * @copyright       Copyright 2005-2009, Dirk Jesse
+ * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         3.1
+ * @revision        $Revision: 343 $
+ * @lastmodified    $Date: 2009-01-19 23:41:32 +0100 (Mo, 19. Jan 2009) $
+ * @appdef yaml
+ */
+
+@media all
+{
+ /**
+  * Fonts
+  *
+  * (en) global settings of font-families and font-sizes
+  * (de) Globale Einstellungen für Zeichensatz und Schriftgrößen
+  *
+  * @section content-global-settings
+  */
+
+  /* (en) reset font size for all elements to standard (16 Pixel) */
+  /* (de) Alle Schriftgrößen auf Standardgröße (16 Pixel) zurücksetzen */
+  html * { font-size: 100.01%; }
+
+ /**
+  * (en) reset monospaced elements to font size 16px in all browsers
+  * (de) Schriftgröße von monospaced Elemente in allen Browsern auf 16 Pixel setzen
+  *
+  * @see: http://webkit.org/blog/67/strange-medium/
+  */
+
+  textarea, pre, code, kbd, samp, var, tt {
+    font-family: Consolas, "Lucida Console", "Andale Mono", "Bitstream Vera Sans Mono", "Courier New", Courier;
+  }
+
+  /* (en) base layout gets standard font size 12px */
+  /* (de) Basis-Layout erhält Standardschriftgröße von 12 Pixeln */
+  body {
+    font-family:  Verdana, Arial, Helvetica, sans-serif;
+    font-size: 75.00%;
+    color: #444;
+  }
+
+  /*--- Headings | Überschriften ------------------------------------------------------------------------*/
+
+  h1,h2,h3,h4,h5,h6 {
+    font-family: Verdana, "Times New Roman", Times, serif;
+    font-weight:normal;
+    color:#222;
+    margin: 0 0 0.25em 0;
+  }
+
+  h1 { font-size: 250%; }                       /* 30px */
+  h2 { font-size: 200%; }                       /* 24px */
+  h3 { font-size: 150%; }                       /* 18px */
+  h4 { font-size: 133.33%; }                    /* 16px */
+  h5 { font-size: 116.67%; }                    /* 14px */
+  h6 { font-size: 116.67%; }                    /* 14px */
+
+  /* --- Lists | Listen  -------------------------------------------------------------------------------- */
+
+  ul, ol, dl { line-height: 1.5em; margin: 0 0 1em 1em; }
+  ul li { list-style-type: disc; }
+  ul ul li { list-style-type: circle; }
+
+  ol li { list-style-type: decimal; }
+  ol ol li { list-style-type: lower-latin; }
+
+  li { margin-left: 0.8em; line-height: 1.5em; }
+
+  dt { font-weight: bold; }
+  dd { margin: 0 0 1em 0.8em; }
+
+  /* --- general text formatting | Allgemeine Textauszeichnung ------------------------------------------ */
+
+  p { line-height: 1.5em; margin: 0 0 1em 0; }
+
+  blockquote, cite,q {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-style:italic;
+  }
+  blockquote { margin: 0 0 1em 1.6em; color: #666; }
+
+  strong,b { font-weight: bold; }
+  em,i { font-style: italic; }
+
+  pre, code, kbd, tt, samp, var { font-size: 100%; }
+  pre, code { color: #800; }
+  pre { line-height: 1.5em; margin: 0 0 1em 0; }
+  kbd, samp, var { color: #666; }
+  var { font-style: italic; }
+
+  acronym, abbr {
+    border-bottom: 1px #aaa dotted;
+    font-variant: small-caps;
+    letter-spacing: .07em;
+    cursor: help;
+  }
+
+  sub, sup { font-size: 91.6667%; }
+
+  hr {
+    color: #fff;
+    background:transparent;
+    margin: 0 0 0.5em 0;
+    padding: 0 0 0.5em 0;
+    border:0;
+    border-bottom: 1px #eee solid;
+  }
+
+  /*--- Error ----------------------------------------------------------------------------------------- */
+  
+  div#error{
+        border: 2px #990000 solid;
+        color:#660000;
+        padding:0.3em;
+        margin:2em;
+  }
+  
+  div#error h2 {
+        font-size: 1.4em;
+        color:#660000;
+  }
+  
+  div#error h3 {
+        margin:0;
+        padding:0;
+        font-size: 1.2em;
+        color:#660000;
+        padding:1.0em;
+        font-weight:bold;
+  }
+
+  /*--- Forms ----------------------------------------------------------------------------------------- */
+
+  
+    ul.ul-form {
+        list-style-type: none;
+        color:#000000;
+        margin-left:2em;
+        margin-bottom:40px;
+    }
+    
+    ul.ul-form li h2 {
+        font-size: 1.2em;
+    }
+
+    ul.ul-form li {
+        list-style-type: none !important;
+    }
+    
+    ul.ul-form li.item_label {
+        color:#000000;
+    }
+
+    ul.ul-form li.item_content {
+        margin-left:40px;
+        font-size: 1.2em;
+        margin-bottom:25px;
+        color:#000000;
+    }
+    
+    ul.ul-form textarea {
+        width:70%;
+        padding:0.3em;
+        font-size: 1.0em;
+    }
+    
+    ul.ul-form textarea:hover, ul.ul-form textarea:focus {
+        background-color:#eeeeee;
+    }
+
+    ul.ul-form li.item_content select {
+        width:70%;
+        font-size: 1.0em;
+    }
+    
+    ul.ul-form input[type="checkbox"] {
+        width:0.7em;
+        height:0.7em;
+        padding:0.3em;
+        font-size: 2em !important;
+    }
+    
+    ul.ul-form input[type="radio"] {
+        width:0.7em !important;
+        height:0.7em !important;
+        padding:0.3em !important;
+        font-size: 2em !important;
+    }
+
+    ul.ul-form input {
+        width:70%;
+        padding:0.3em;
+        font-size: 1em !important;
+    }
+    
+
+    
+    ul.ul-form input:hover, ul.ul-form input:focus {
+        background-color:#eeeeee;
+    }
+
+    ul.ul-form input#submit, ul.ul-form input#update, ul.ul-form input#save, ul.ul-form input#cancel, ul.ul-form input#delete {
+        padding:3px;
+        width:7em;
+        font-weight:normal;
+    }
+    
+     option.selected
+    {
+        font-weight:bold;
+        color:#ffffff;
+        background-color:#4d87c7;
+    }
+    
+  /*--- Item edit files ----------------------------------------------------------------------------------------- */   
+    
+  ul#file_list li {
+  	list-style-type: none;
+  	margin-top:1.4em;
+  }
+  
+  ul#file_list li a.item_file_name{
+  	font-weight:bold;
+  	font-size: 1.1em;
+  	text-decoration:underline;
+  }
+  div.file_name {
+  	margin-bottom:0.5em;
+  }
+  
+  div.item_file_form {
+  	width:92%;
+  }
+  div.item_file_form input {
+  	width:80%;
+  	margin-bottom:0.4em;
+  	padding:0.2em;
+  	font-size: 1.1em;
+  	display:block;
+  }
+  div.item_file_form textarea {
+  	width:80%;
+  	padding:0.2em;
+  	font-size: 1.1em;
+  }
+  /*--- Item edit images ----------------------------------------------------------------------------------------- */   
+    
+  ul#image_list li {
+  	list-style-type: none;
+  	margin-top:1.4em;
+  }
+  
+  div.image_name {
+  	margin-bottom:0.5em;
+  	font-weight:normal;
+  	font-size: 1.0em;
+  }
+  
+  div.item_image_form input {
+  	width:80%;
+  	margin-bottom:0.4em;
+  	padding:0.2em;
+  	font-size: 1.1em;
+  	display:block;
+  }
+  div.item_image_form textarea {
+  	width:80%;
+  	padding:0.2em;
+  	font-size: 1.1em;
+  }
+  /*--- Links ----------------------------------------------------------------------------------------- */
+
+  a { color: #4D87C7; background:transparent; text-decoration:none; }
+  a:visited  { color: #036; }
+
+  a:focus,
+  a:hover,
+  a:active { color:#182E7A; text-decoration:underline; }
+  
+  a.add-common { float:right;margin:1.5em; font-size:1.2em; font-weight:bold; }
+  
+  span.additional-link-info {
+    font-size:0.7em;
+  }
+
+  /* --- images (with optional captions) | Bilder (mit optionaler Bildunterschrift) ------------------ */
+
+  p.icaption_left { float:left; display:inline; margin: 0 1em 0.15em 0; }
+  p.icaption_right { float:right; display:inline; margin: 0 0 0.15em 1em; }
+
+  p.icaption_left img,
+  p.icaption_right img { padding:0; border: 1px #888 solid; }
+
+  p.icaption_left strong,
+  p.icaption_right strong { display:block; overflow:hidden; margin-top: 2px; padding: 0.3em 0.5em; background: #eee; font-weight: normal; font-size: 91.667%; }
+
+ /**
+  * ------------------------------------------------------------------------------------------------- #
+  *
+  * Generic Content Classes
+  *
+  * (en) standard classes for positioning and highlighting
+  * (de) Standardklassen zur Positionierung und Hervorhebung
+  *
+  * @section content-generic-classes
+  */
+
+  .highlight { color: #f60; }
+  .dimmed { color: #888; }
+
+  .info { background: #f8f8f8; color: #666; padding: 10px; margin-bottom: 0.5em; font-size: 91.7%; }
+
+  .note { background: #efe; color: #040; border: 2px #484 solid; padding: 10px; margin-bottom: 1em; }
+  .important { background: #ffe; color: #440; border: 2px #884 solid; padding: 10px; margin-bottom: 1em; }
+  .warning { background: #fee; color: #400; border: 2px #844 solid; padding: 10px; margin-bottom: 1em; }
+
+  .float_left { float: left; display:inline; margin-right: 1em; margin-bottom: 0.15em; }
+  .float_right { float: right; display:inline; margin-left: 1em; margin-bottom: 0.15em; }
+  .center { display:block; text-align:center; margin: 0.5em auto; }
+
+ /**
+  * ------------------------------------------------------------------------------------------------- #
+  *
+  * Tables | Tabellen
+  *
+  * (en) Generic classes for table-width and design definition
+  * (de) Generische Klassen für die Tabellenbreite und Gestaltungsvorschriften für Tabellen
+  *
+  * @section content-tables
+  */
+
+  table { width: auto; border-collapse:collapse; margin-bottom: 0.5em; border-top: 2px #888 solid; border-bottom: 2px #888 solid; }
+  table caption { font-variant:small-caps; }
+  table.full { width: 100%; }
+  table.fixed { table-layout:fixed; }
+
+  th,td { padding: 0.5em; }
+  thead th { color: #000; border-bottom: 2px #800 solid; }
+  tbody th { background: #e0e0e0; color: #333; }
+  tbody th[scope="row"], tbody th.sub { background: #f0f0f0; }
+
+  tbody th { border-bottom: 1px solid #fff; text-align: left; }
+  tbody td { border-bottom: 1px solid #eee; }
+
+  tbody tr:hover th[scope="row"],
+  tbody tr:hover tbody th.sub { background: #f0e8e8; }
+  tbody tr:hover td { background: #fff8f8; }
+
+
+ /**
+  * ------------------------------------------------------------------------------------------------- #
+  *
+  * Module specific formatings
+  *
+  * @section content-global-settings
+  */
+
+  h1#page_head
+  {
+        padding:0.5em;
+        font-size: 1.4em;
+  }
+  
+  /*--- List-common ----------------------------------------------------------------------------------------- */
+  
+  ul.list-common {
+        list-style-type: circle;
+        color:#000000;
+        margin-left:2em;
+        margin-bottom:40px;
+  }
+  
+
+  ul.list-common li {
+      list-style-type:  circle;
+      font-size: 1.3em;
+      margin-bottom:0.5em;
+  }
+
+ /**
+  * ------------------------------------------------------------------------------------------------- #
+  *
+  * Miscellaneous | Sonstiges
+  *
+  * @section content-misc
+  */
+
+ /**
+  * (en) Emphasizing external Hyperlinks via CSS
+  * (de) Hervorhebung externer Hyperlinks mit CSS
+  *
+  * @section             content-external-links
+  * @app-yaml-default    disabled
+  */
+
+  /*
+  #main a[href^="http://www.my-domain.com"],
+  #main a[href^="https://www.my-domain.com"]
+  {
+    padding-left: 12px;
+    background-image: url('your_image.gif');
+    background-repeat: no-repeat;
+    background-position: 0 0.45em;
+  }
+  */
+  
+/*--- Loading gif ----------------------------------------------------------------------------------------- */
+  
+  #loading {
+        float:right;
+        margin-right:10em;
+  } 
+  
+  .loading {
+        height:40px;
+  }
+  
+  .attribute_group {
+        height:40px;
+        padding-top:1em;
+  }
+  
+/*--- additional attributes ----------------------------------------------------------------------------------------- */
+
+  h2.attribute_additional_head {
+        font-size: 1.2em;
+        font-weight: normal;
+        margin:0.6em;
+        margin-left:2em;
+        margin-bottom:1em;
+        text-decoration:underline;
+  }
+/*--- additional default attributes in lists and list items ---------------------------------------------------------- */
+  
+    ul.attributes_default {
+        margin-left:0em;
+        margin-bottom:1em;
+    }
+    ul.attributes_default li {
+        list-style-type: none !important;
+        margin-bottom:0 !important;
+        padding-bottom:0 !important;
+        line-height:100%;
+    }
+    ul.attributes_default li h4 {
+        font-size: 0.7em;
+        margin: 0;
+        padding: 0;
+    }
+    
+/*--- list and item search page ---------------------------------------------------------- */
+
+    p.search_list_branch {
+          font-size: 0.8em;
+          color:#000000;
+          margin: 0;
+          padding: 0;
+          margin-bottom: 0.4em;
+    }
+    
+    h3#close_search {
+    	width:98%;
+    	text-align:right;
+    	color:#4D87C7;
+    	font-size: 1em;
+    }
+
+/*--- pagination ---------------------------------------------------------- */
+
+    .paginationControl {
+          font-size: 1.2em;
+          margin: 0;
+          padding: 0.3em;
+          margin-top:    0.5em;
+          margin-bottom: 0.5em;
+          border-top: 1px #4D87C7 solid;
+          border-bottom: 1px #4D87C7 solid;
+    }
+    
+/*--- production error ---------------------------------------------------------- */
+
+    #production_error {
+          margin: 2em;
+    }
+    #production_error h1 {
+          font-size: 1.4em;
+    }
+    #production_error p {
+          font-size: 1.2em;
+    }
+    
+    
+#tree  {
+    font-size: 1.4em;
+    margin:0;
+padding:0;
+}
+#tree .level_0 {
+    margin-left:0px;
+    margin-bottom:6px;
+}
+
+#tree .level_1 {
+    margin-left:40px;
+    margin-bottom:4px;
+}
+
+#tree .level_2 {
+    margin-left:80px;
+    margin-bottom:3px;
+}
+
+#tree .level_3 {
+    margin-left:120px;
+    margin-bottom:3px;
+}
+
+#tree .level_4 {
+    margin-left:160px;
+    margin-bottom:3px;
+}
+
+#tree .level_5 {
+    margin-left:200px;
+    margin-bottom:3px;
+}
+
+/*--- project geometries ---------------------------------------------------------- */
+
+ul.project_geometries {
+	list-style-type: none;
+	color:#000000;
+	margin-left:2em;
+	margin-bottom:40px;
+}
+
+ul.project_geometries .project_geometries_entry {
+	margin-top:20px;
+	padding-bottom:20px;
+	border-bottom: 2px #4D87C7 solid;
+}
+
+ul.project_geometries li h2 {
+	font-size: 1.6em;
+}
+
+ul.project_geometries li h3 {
+	font-size: 1.3em;
+}
+
+ul.project_geometries li input.project_geometries_srid {
+	width:150px;
+}
+
+ul.project_geometries li input.project_geometries_text {
+	width:90%;
+}
+
+ul.project_geometries li input.project_geometries_checkbox {
+	width:1.4em;
+	height:1.4em;
+}
+
+ul.project_geometries li {
+	list-style-type: none !important;
+	padding-bottom:1em;
+}
+
+ul.project_geometries li.item_label {
+	color:#000000;
+}
+
+ul.project_geometries li.item_content {
+	margin-left:40px;
+	font-size: 0.8em;
+	margin-bottom:25px;
+	color:#000000;
+}
+
+ul.project_geometries li input, ul.project_geometries li textarea {
+	padding:0.3em;
+	font-size: 1.4em;
+}
+
+ul.project_geometries textarea {
+	width:90%;
+}
+
+
+
+}

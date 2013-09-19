@@ -1,0 +1,179 @@
+<?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    $('#loading').hide();
+    $("#attribute_group").change(function(){
+
+            var id_group = $('select#attribute_group option:selected').val();
+
+            if(id_group == '')
+            {
+                $('.new').remove();
+                return;
+            }
+
+        $.ajax({
+          type: "POST",
+          url: "<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/ajax-get-group-attributes-html",
+          data: ({id_group : id_group}),
+          success: function(data) {
+             $('.new').remove();
+             $(data).insertAfter('.attribute');
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+    });
+
+    $('')
+        $('#loading')
+        .ajaxStart(function() {
+        $(this).show();
+        }).ajaxStop(function() {
+        $(this).hide();
+        });
+
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Add List</h1>
+
+    <ul id="node-branch" role="navigation">
+    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/index/id_list/0">Root</a>/</li>
+    <?php foreach( $this->list_branch_result as $branch): ?>
+        <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/index/id_list/<?php  echo $escape->escapeHtmlAttr($branch['id_list']); ?>"><?php  echo $escape->escapeHtml($branch['title']); ?></a>/</li>
+    <?php endforeach; ?>
+    </ul>
+
+    <div class="separation">&nbsp;</div>
+
+    <?php if(count($error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($error as $_error): ?>
+            <h3><?php echo $escape->escapeHtml($_error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list-add/add" accept-charset="utf-8">
+
+    <input type="hidden" name="id_list" value="<?php echo $escape->escapeHtmlAttr($this->id_list); ?>" />
+
+    <ul class="ul-form">
+        <li class="item_label"><h2><label for="list_name" id="agn">List title:</label></h2></li>
+        <li class="item_content">
+                <input aria-required="true"
+                       aria-labelledby="agn"
+                       name="list_name"
+                       id="list_name"
+                       tabindex="1"
+                       type="text"
+                       size="40"
+                       maxlength="255"
+                       value="<?php echo $escape->escapeHtmlAttr($this->list_name); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label for="list_id_status" id="is">List status:</label></h2></li>
+        <li class="item_content">
+            <select name="list_id_status" id="list_id_status" size="1" tabindex="2">
+            <option value="100"<?php if($this->list_id_status==100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+            <option value="200"<?php if($this->list_id_status==200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+            </select>
+        </li>
+
+        <li class="item_label"><h2><label for="list_name" id="lip">List is preferred:</label></h2></li>
+        <li class="item_content">
+                <input aria-labelledby="lip"
+                       name="list_preferred"
+                       id="list_preferred"
+                       tabindex="3"
+                       type="checkbox"
+                       value="1"
+                       <?php if($this->list_preferred == 1) echo 'checked="checked"'; ?> />
+        </li>
+
+        <li class="item_label"><h2><label for="list_lang" id="clang">List language:</label></h2></li>
+        <li class="item_content">
+        <select name="list_lang" id="list_lang" size="1" lang="en" tabindex="4">
+                <?php foreach($this->languages as $val):  ?>
+        <option value="<?php echo $escape->escapeHtmlAttr($val['lang']); ?>"<?php if($this->list_lang==$val['lang']): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['description']); ?></option>
+        <?php endforeach; ?>
+        </select>
+        </li>
+
+        <li class="item_label"><h2><label for="list_description" id="agd">List description:</label></h2></li>
+        <li class="item_content">
+                <textarea name="list_description"
+                          id="list_description"
+                          aria-labelledby="agd"
+                          tabindex="5"
+                          cols="50"
+                          rows="5"><?php echo $escape->escapeHtmlAttr($this->list_description); ?></textarea>
+        </li>
+
+    </ul>
+
+    <ul class="ul-form attribute" title="select additional attributes from a group">
+        <li class="item_label"><h2><label for="attribute_group" id="agroup"><strong>Select attribute group (optional):</strong></label></h2></li>
+        <li class="item_content loading">
+        <select name="attribute_group" id="attribute_group" size="1" lang="en" tabindex="6">
+            <option value="">None</option>
+            <?php foreach($this->attribute_groups as $val):  ?>
+            <option value="<?php echo $escape->escapeHtmlAttr($val['id_group']); ?>"<?php if(strcmp($this->attribute_id_group, $val['id_group'])==0): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['title']); ?></option>
+            <?php endforeach; ?>
+            </select>
+
+        <img id="loading" src="<?php echo $basePath; ?>/admin_media/images/loading-red.gif" alt="loading additional attributes...please wait" />
+        </li>
+    </ul>
+
+    <?php /**** error on submit. load additional attribute fields with content ****/ ?>
+    <?php if(isset($additionalAttributes)): ?>
+
+    <h2 class="attribute_additional_head">Additional list attributes</h2>
+      <?php echo $this->partial('layout/_additional_attributes.phtml', 
+                                $additionalAttributes); ?>
+    <?php endif; ?>
+
+    <ul class="ul-form" title="additional list attributes">
+        <li class="item_label"><h2><label for="submit" id="sub">Submit new List or cancel:</label></h2></li>
+        <li class="item_content">
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="add"
+                   id="submit"
+                   value="Submit" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   id="cancel"
+                   value="Cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_list_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

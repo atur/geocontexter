@@ -1,0 +1,170 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Edit attribute: </h1>
+
+    <div>&nbsp;</div>
+
+    <?php if(count($error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($error as $error): ?>
+            <h3><?php echo $escape($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-edit/update" accept-charset="utf-8">
+
+    <input type="hidden" name="id_group" id="id_group" value="<?php echo $escape->escapeHtmlAttr($id_group); ?>" />
+    <input type="hidden" name="id_attribute" id="id_attribute" value="<?php echo $escape->escapeHtmlAttr($id_attribute); ?>" />
+    <input type="hidden" name="system_serial" id="system_serial" value="<?php echo $escape->escapeHtmlAttr($attribute_result['system_serial']); ?>" />
+
+    <ul class="ul-form" role="slider">
+        <li class="item_label"><h2><label for="attribute_name" id="an">Attribute name:</label></h2></li>
+        <li class="item_content">
+            <input aria-required="true"
+                   aria-labelledby="agn"
+                   name="attribute_name"
+                   id="attribute_name"
+                   tabindex="1"
+                   type="text"
+                   size="40"
+                   maxlength="126"
+                   value="<?php echo $escape->escapeHtmlAttr($attribute_result['attribute_name']); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_title" id="atit">Attribute title:</label></h2></li>
+        <li class="item_content">
+            <input aria-required="true"
+               aria-labelledby="atit"
+               name="attribute_title"
+               id="attribute_title"
+               tabindex="2"
+               type="text"
+               size="40"
+               maxlength="126"
+               value="<?php echo $escape->escapeHtmlAttr($attribute_result['attribute_title']); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label for="id_status" id="is">Attribute status:</label></h2></li>
+        <li class="item_content">
+                <select name="id_status" id="id_status" size="1" tabindex="3">
+                <option value="0"<?php if($attribute_result['id_status']==0): ?> selected="selected" class="selected"<?php endif; ?>>trash&nbsp;&nbsp;</option>
+                <option value="100"<?php if($attribute_result['id_status']==100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+                <option value="200"<?php if($attribute_result['id_status']==200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+                </select>
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_type" id="at">Attribute type:</label></h2></li>
+        <li class="item_content">
+                <select name="attribute_type" id="attribute_type" size="1" tabindex="4">
+                    <option value="bool"<?php if(strcasecmp($attribute_result['attribute_type'], 'bool')==0): ?> selected="selected" class="selected"<?php endif; ?>>boolean&nbsp;&nbsp;</option>
+                    <option value="int"<?php if(strcasecmp($attribute_result['attribute_type'], 'int')==0): ?> selected="selected" class="selected"<?php endif; ?>>integer&nbsp;&nbsp;</option>
+                    <option value="float"<?php if(strcasecmp($attribute_result['attribute_type'], 'float')==0): ?> selected="selected" class="selected"<?php endif; ?>>float&nbsp;&nbsp;</option>
+                    <option value="string"<?php if(strcasecmp($attribute_result['attribute_type'], 'string')==0): ?> selected="selected" class="selected"<?php endif; ?>>string&nbsp;&nbsp;</option>
+                </select>
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_regex" id="mv">Is multi value:</label></h2></li>
+        <li class="item_content">
+                <input aria-labelledby="mv"
+                       name="multi_value"
+                       id="multi_value"
+                       tabindex="5"
+                       type="checkbox"
+                       <?php if('1' == $attribute_result['multi_value']): ?>checked="checked"<?php endif; ?>
+                       value="1" />
+        </li>
+
+        <li class="item_label virtual"><h2><label for="attribute_type" id="at">Attribute html type:</label></h2></li>
+        <li class="item_content virtual">
+                <select name="attribute_html_type" id="attribute_html_type" size="1" tabindex="6">
+                    <option value="input"<?php if(strcasecmp($attribute_result['attribute_html_type'], 'input')==0): ?> selected="selected" class="selected"<?php endif; ?>>input&nbsp;&nbsp;</option>
+                    <option value="textarea"<?php if(strcasecmp($attribute_result['attribute_html_type'], 'textarea')==0): ?> selected="selected" class="selected"<?php endif; ?>>textarea&nbsp;&nbsp;</option>
+                </select>
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_regex" id="ar">Attribute regex:</label></h2></li>
+        <li class="item_content">
+            <input aria-labelledby="ar"
+                   name="attribute_regex"
+                   id="attribute_regex"
+                   tabindex="7"
+                   type="text"
+                   size="40"
+                   maxlength="1000"
+                   value="<?php echo $escape->escapeHtmlAttr($attribute_result['attribute_regex']); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_regex" id="dd">Attribute default display:</label></h2></li>
+        <li class="item_content">
+            <input aria-labelledby="dd"
+               name="default_display"
+               id="default_display"
+               tabindex="8"
+               type="checkbox"
+               <?php if('1' == $attribute_result['default_display']): ?>checked="checked"<?php endif; ?>
+               value="1" />
+        </li>
+
+        <li class="item_label"><h2><label for="attribute_description" id="ad">Attribute description:</label></h2></li>
+        <li class="item_content">
+            <textarea name="attribute_description"
+                  id="attribute_description"
+                  aria-labelledby="ad"
+                  tabindex="10"
+                  cols="50"
+                  rows="5"><?php echo $escape->escapeHtmlAttr($attribute_result['attribute_description']); ?></textarea>
+        </li>
+
+        <li class="item_label"><h2><label for="submit" id="sub">Submit,update or cancel changes:</label></h2></li>
+        <li class="item_content">
+        <?php if($attribute_result['system_serial'] != 'NULL'): ?>
+
+            <input role="button"
+               aria-labelledby="sub"
+               tabindex="11"
+               type="submit"
+               name="submit"
+               id="submit"
+               title="save changes and go back to the attribute group"
+               value="Submit" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+               aria-labelledby="sub"
+               tabindex="12"
+               type="submit"
+               name="update"
+               id="update"
+               title="save changes and stay on this page"
+               value="Update" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <?php endif; ?>
+
+            <input role="button"
+               tabindex="13"
+               aria-labelledby="sub"
+               type="submit"
+               name="cancel"
+               id="cancel"
+               title="dont save changes and go back to the attribute group"
+               value="Cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_attribute_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>

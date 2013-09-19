@@ -1,0 +1,33 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+       
+    $("#search_button").click(function(){       
+    
+    $_search = $('#search').val().replace(/\\/,'');
+    
+    new_window = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword-search/index/value/" + encodeURI($_search), 
+                             "KeywordSearch", 
+                             "width=550,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+    new_window.focus();
+    });
+    
+ });
+
+</script>
+
+<ul id="right_sub_navigaion" role="navigation">
+  <?php if($this->active_page == 'main'): ?>
+  <li class="select">Keyword</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword/index/id_keyword/<?php echo $this->id_keyword; ?>">keyword</a></li>
+  <?php endif; ?>
+  <?php if($this->active_page == 'add'): ?>
+  <li class="select">Add keyword</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword-add/index/id_keyword/<?php echo $this->id_keyword; ?>">Add keyword</a></li>
+  <?php endif; ?>
+  
+  <input name="search" id="search" type="text" size="30" maxlength="126" value="" />
+  <input role="button" type="button" name="search_button" id="search_button" value="search" />
+</ul>

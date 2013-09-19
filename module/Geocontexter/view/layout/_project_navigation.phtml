@@ -1,0 +1,10 @@
+<ul id="right_sub_navigaion" role="navigation">
+  <?php if($this->active_page != 'main'): ?>
+  <li><a href="javascript:history.back();">Back</a></li>
+  <?php endif; ?>
+  <?php if($this->active_page == 'add'): ?>
+  <li class="select">Add project</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-add/index/id_project/<?php echo $this->id_project; ?>">Add project</a></li>
+  <?php endif; ?>
+</ul>

@@ -1,0 +1,50 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    $("#search_button").click(function(){
+
+      $_search = $('#search').val().replace(/\\/,'');
+      var _callback_num = $('#callback_num').val();
+      var _postfix = '';
+      if (_callback_num) {
+        _postfix = '/callback_num/' + _callback_num;
+      }
+      
+      new_window = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/item-search/search/item/" + encodeURI($_search) + _postfix,
+                               "Search",
+                               "width=750,height=550,left=20,top=20,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+ });
+ 
+</script>
+
+<ul id="right_sub_navigaion" role="navigation">
+  <?php if($active_page == 'main'): ?>
+  <li class="select">List</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/index/id_list/<?php echo $id_list; ?>">List</a></li>
+  <?php endif; ?>
+  <?php if($active_page == 'add'): ?>
+  <li class="select">Add list</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list-add/index/id_list/<?php echo $id_list; ?>">Add list</a></li>
+  <?php endif; ?>
+  <?php if($active_page == 'add_item_new'): ?>
+  <li class="select">Add item</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/item-add-new/index/id_list/<?php echo $id_list; ?>">Add item</a></li>
+  <?php endif; ?>
+
+ <div id="item_search">
+  <li style="list-style-type: none;">
+  <span><input type="radio" title="check to search for lists" class="search_type" name="search_type" value="list" /> List &nbsp;&nbsp; <input type="radio" title="check to search for list items" class="search_type" name="search_type" value="item" /> Item
+  <br /></span>
+  <input name="search" title="search text for lists or list items. case sensitive." id="search" type="text" size="30" maxlength="126" value="" />
+  <input name="search_select" id="search_select" type="hidden" value="" />
+  <input role="button" type="button" name="search_button" id="search_button" value="search" />
+  </li>
+ </div>
+</ul>

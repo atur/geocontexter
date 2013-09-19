@@ -1,0 +1,103 @@
+<?php
+/**
+ * GeoContexter
+ * @link http://code.google.com/p/geocontexter/
+ * @package GeoContexter
+ */
+
+/**
+ * Admin login controller
+ *
+ * @package GeoContexter
+ * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @author Armand Turpel <geocontexter@gmail.com>
+ * @version $Rev: 828 $ / $LastChangedDate: 2011-02-27 10:30:28 +0100 (So, 27 Feb 2011) $ / $LastChangedBy: armand.turpel $
+ */
+
+namespace Geocontexter\Controller;
+
+use Zend\View\Model\ViewModel;
+use Core\Controller\AbstractController;
+
+class LoginController extends AbstractController
+{
+    public function _init()
+    {
+        $this->initView( 'geocontexter/login/index.phtml' );
+
+        $this->AuthService = $this->getServiceLocator()->get('CoreAuth');
+    }
+
+    public function getSessionStorage()
+    {
+        if (! $this->storage) {
+            $this->storage = new \Geocontexter\Library\Storage();
+        }
+
+        return $this->storage;
+    }
+
+    /**
+     */
+    public function indexAction()
+    {
+        $this->_init();
+
+        $this->view->error = array();
+
+        return $this->view;
+    }
+
+    /**
+     * perform on the login request
+     *
+     */
+    public function dologinAction()
+    {
+        $this->_init();
+
+        $username     = $this->strip_bad_code( $this->request->getPost()->username);
+        $userpassword = $this->strip_bad_code( $this->request->getPost()->userpassword);
+
+        if (empty($username) || empty($userpassword)) {
+            $this->AuthService->clearIdentity();
+            return $this->redirect()->toRoute('admin', array('controller' => 'login'));
+        }
+
+        $this->AuthService->getAdapter()->setIdentity($username)
+                                        ->setCredential($userpassword);
+
+        $result = $this->AuthService->authenticate();
+
+
+        if ($result->isValid()) {
+
+            if ($this->request->getPost()->rememberme == 1 ) {
+
+                $this->getSessionStorage()->setRememberMe(1);
+
+                //set storage again
+                $this->AuthService->setStorage($this->getSessionStorage());
+            }
+
+            $user = $this->AuthService->getAdapter()->getResultRowObject(null, array('user_password'));
+
+            $this->AuthService->getStorage()->write($user);
+
+            return $this->redirect()->toRoute('admin', array('controller' => 'context'));
+
+        }
+
+        $this->AuthService->clearIdentity();
+
+        $this->view->error = array('Login failed');
+
+        return $this->view;
+    }
+
+    private function strip_bad_code( $_str )
+    {
+        return preg_replace("/[^a-zA-Z0-9_-]/", "", $_str);
+    }
+}
+

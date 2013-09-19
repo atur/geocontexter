@@ -1,0 +1,46 @@
+            <!-- begin: error messages -->
+            <?php if(count($error)>0): ?>
+              <div id="error">
+                <a name="setup_error"></a>
+                <h2>Message:</h2>
+                <ul role="status">
+                <?php foreach($error as $err): ?>
+                  <li class="error"><?php echo $err; ?></li>
+                <?php endforeach; ?>
+                </ul>
+              </div>
+            <?php endif; ?>
+            <!-- end: error messages -->
+
+            <!-- begin: setup data form -->
+            <a name="setup_form"></a>
+            <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/login/doLogin" accept-charset="utf-8">
+
+             <ul class="login">
+
+                <li class="login_label"><label for="username">User name: *</label></li>
+                <li class="login_content">
+                    <input name="username" id="username" type="text" size="30" maxlength="30" value="" />
+                </li>
+
+                <li class="login_label"><label for="userpassword">User password: *</label></li>
+                <li class="login_content">
+                    <input name="userpassword" id="userpassword" type="password" size="30" maxlength="30" value="" />
+                </li>
+                
+                <li class="login_label">* accepted chars: a-zA-Z0-9_-</li>
+
+            </ul>
+
+            <ul class="login">
+                <li class="login_label"><label for="submit">Do login:</label></li>
+                <li class="login_content">
+                    <input type="submit" name="do_login" id="login_submit" value="Submit" />
+                </li>
+            </ul>
+
+            </form>
+            <!-- end: setup data form -->
+
+
+

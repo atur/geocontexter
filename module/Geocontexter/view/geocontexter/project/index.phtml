@@ -1,0 +1,45 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Projects</h1>
+
+    <ul id="node-branch" role="navigation" title="project branch">
+    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project/index/id_project/0">Root</a>/</li>
+    <?php foreach( $this->project_branch_result as $branch): ?>
+        <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project/index/id_project/<?php  echo $branch['id_project']; ?>"><?php  echo $escape->escapeHtml($branch['title']); ?></a>/</li>
+    <?php endforeach; ?>
+    </ul>
+
+    <div class="separation">&nbsp;</div>
+
+    <?php if(count($this->project_result) > 0): ?>
+ 
+    <ul id="node-list">
+    <?php foreach( $this->project_result as $project): ?>
+        <li <?php if($project['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($project['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($project['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project/index/id_project/<?php  echo $project['id_project']; ?>"><?php  echo $escape->escapeHtml($project['title']); ?></a> 
+            <span class="additional-link-info">(<abbr title="Number of child projects"><?php  echo $project['num_childs']; ?></abbr>)
+            <?php if($project['system_serial'] != NULL): ?>
+            <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-edit/index/id_project/<?php  echo $project['id_project']; ?>">edit</a>
+            <?php endif; ?>
+            </span></li>
+    <?php endforeach; ?>
+    </ul>
+
+    <?php endif; ?>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_project_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

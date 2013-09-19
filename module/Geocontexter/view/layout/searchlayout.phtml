@@ -1,0 +1,94 @@
+<?php //echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle(' - Geocontexter Admin') ?>
+
+        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+
+	<!-- (en) Add your meta data here -->
+	<!-- (de) Fuegen Sie hier ihre Meta-Daten ein -->
+	<link href="<?php echo $basePath; ?>/admin_media/css/layout_3col_standard.css" rel="stylesheet" type="text/css"/>
+	<!--[if lte IE 7]>
+	<link href="<?php echo $basePath; ?>/admin_media/css/patches/patch_3col_standard.css" rel="stylesheet" type="text/css" />
+	<![endif]-->
+
+	<script type="text/javascript" src="<?php echo $basePath; ?>/library/jquery/jquery.js"></script>
+	<link type="text/css" href="<?php echo $basePath; ?>/library/jquery-ui/themes/redmond/jquery-ui.css" rel="stylesheet" />	
+	<script type="text/javascript" src="<?php echo $basePath; ?>/library/jquery-ui/ui/jquery-ui-all-in-one.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function() {
+	    $('.admin_menu_link').toggle(function() {
+	      $('#admin_menu').show('slow');
+	      $('#main_content').hide();
+	      $('.admin_menu_link').html('Close Admin Menu');
+	    }, function() {
+		$('#admin_menu').hide();
+		$('#main_content').show('slow');
+		$('.admin_menu_link').html('Admin Menu');
+	    });
+	 });
+	</script>
+
+
+    </head>
+    
+<body>
+
+<div id="header">
+	<div class="page_margins">
+		<div class="page" role="banner">
+		  <div class="floatbox">
+			  <h1>Item search</h1>
+		  </div>
+		</div>
+	</div>
+</div>
+    
+<div id="main">
+
+	<!-- begin: main content area #main -->
+	<div class="page_margins">
+	  <div class="page" id="main_content">
+
+		  <!-- begin: #col3 static column -->
+		  <div id="col3">
+
+			<div id="col3_content" class="clearfix">
+			  <!-- skiplink anchor: Content -->
+				<!--#######################-->
+				<!-- BEGIN: Module content -->
+				<!--#######################-->
+				<div id="module_content" role="main">
+				    <a name="content"></a>
+				    <?php echo $this->content; ?>
+				</div>
+				<!--#####################-->
+				<!-- END: Module content -->
+				<!--#####################-->
+			</div>
+
+			<div id="ie_clearing">&nbsp;</div>
+			<!-- End: IE Column Clearing -->
+		  </div>
+		  <!-- end: #col3 -->
+	  </div>
+	</div>
+	
+	<!-- end: #main -->
+
+	<!-- begin: #footer -->
+	<div id="footer">
+		<div class="page_margins">
+			<div class="page">
+			  GeoContexter ver.: <?php //echo $this->system_version; ?><br />Layout based on <a href="http://www.yaml.de/en">YAML</a>
+			</div>
+		</div>
+	</div>
+	<!-- end: #footer -->
+
+</div>
+</body>
+</html>

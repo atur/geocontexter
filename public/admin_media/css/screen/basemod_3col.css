@@ -1,0 +1,522 @@
+@charset "UTF-8";
+/**
+ * "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+ *
+ * (en) Screen layout for YAML examples
+ *
+ * @copyright       Copyright 2005-2009, Dirk Jesse
+ * @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+ *                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+ * @link            http://www.yaml.de
+ * @package         yaml
+ * @version         3.1
+ * @revision        $Revision: 343 $
+ * @lastmodified    $Date: 2009-01-19 23:41:32 +0100 (Mo, 19. Jan 2009) $
+ */
+
+@media screen, projection
+{
+  /**
+   * (en) Formatting YAML's  basic layout elements
+   */
+
+  /* (en) Marginal areas & page background */
+  body { background: #f9f9f9; }
+
+  /* (en) Centering layout in old IE-versions */
+  body { text-align: left; }
+  .page_margins { text-align:left; margin: 0 auto; }
+
+  /* (en) Layout: width, background, borders */
+
+
+  #header, #main, #footer { overflow:hidden; min-width: 900px; }
+
+  /* (en) Designing main layout elements */
+  #header {
+    background-color: #19307c;
+  }
+
+  #header { position:relative; padding: 20px 2em 1em 20px; }
+  .page { position:relative; padding: 0; }
+
+  #topnav { 
+        color: #fff;
+        text-align: right;
+    	margin-right:1em;
+    	padding:0.4em;
+    	float:right;
+    }
+
+
+  #main { background: #fff;padding:0;margin:0; }
+
+  #footer {
+    color:#666;
+    background: #f9f9f9;
+    border-top: 5px #4D87C7 solid;
+    line-height: 1.5em;
+    margin-top:1.5em;
+  }
+
+  #footer .page { padding: 10px 10px; }
+  
+  .default_round_corners {
+	border-radius: 15px;
+	-moz-border-radius: 15px;
+	-webkit-border-radius: 15px;
+   }
+
+  /*------------------------------------------------------------------------------------------------------*/
+
+  /**
+   * (en) Formatting content container
+   *
+   * We only need col3 for the main admin view
+   * Every module has its own format
+   *
+   * |-------------------------------|
+   * | #header                       |
+   * |-------------------------------|
+   * | #col1   | #col3     | #col2   |
+   * | 25%     | flexible  | 25%     |
+   * |-------------------------------|
+   * | #footer                       |
+   * |-------------------------------|
+   */
+
+
+
+
+  #col3 { padding: 0; margin: 0; min-width: 90em; max-width: 90em;}
+  #col3_content { padding: 0; margin: 0; }
+
+
+  /*------------------------------------------------------------------------------------------------------*/
+
+  /**
+   * (en) Styling of layout specific elements
+   */
+     /*------------------------------------------------------------------------------------------------------*/
+
+  /*----------------- Main Menu ----------------------*/
+ 
+  #header h1 {
+    font-weight:normal;
+    font-size:1.4em;
+    letter-spacing:0.3px;
+    line-height:100%;
+    color:#fff;
+  }
+
+  #header span { color:#88c; }
+
+  #topnav a { color: #fff !important; font-weight: normal; background:transparent; text-decoration:none; }
+  #topnav a:focus,
+  #topnav a:hover,
+  #topnav a:active {color: #fff !important; text-decoration:underline; background-color: transparent; }
+
+  #footer a { color: #999; background:transparent; font-weight: bold; }
+  #footer a:focus,
+  #footer a:hover,
+  #footer a:active {color: #4D87C7; background-color: transparent; text-decoration:underline; }
+
+  p.not-yet-defined {
+        font-size:1.2em;
+        margin-bottom:1em;
+        margin-left:3em;
+        color:#0d4787;
+  }
+
+  span.action {
+        font-size:0.8em;
+  }
+  
+  a.action {
+        font-size:1.3em;
+        font-weight: bold;
+        text-decoration:none;
+        padding-left:0.2em;
+        padding-right:0.2em;
+  }
+  a.action:hover {
+        font-size:1.3em;
+        font-weight: bold;
+        text-decoration:none;
+        padding-left:0.2em;
+        padding-right:0.2em;
+  }
+  a.action:focus {
+        font-size:1.3em;
+        font-weight: bold;
+        text-decoration:none;
+        padding-left:0.2em;
+        padding-right:0.2em;
+  }
+
+  .c75l{
+        border-right: 2px #4D87C7 solid;
+  }
+
+  .c75l h1#page_head {
+      font-size:1.2em;
+      font-weight: bold;
+      padding:0.2em;
+      padding-left:1em;
+      margin:0;
+
+      background-color: #4d87c7;
+      color: #ffffff;
+  }
+  
+  h1#page_head_2 {
+      font-size:1.0em;
+      font-weight: bold;
+      padding:0.2em;
+      padding-left:2em;
+      margin:0;
+      margin-bottom:1em;
+      background-color: #4d87c7;
+      color: #ffffff;
+  }
+
+/* Right subnavigation definitions */
+
+    #right_sub_navigaion {
+        font-size:1.3em;
+        list-style-type: circle;
+    }
+
+    #right_sub_navigaion li {
+        margin-bottom:0.6em;
+    }
+
+    #right_sub_navigaion li.select {
+        font-weight:bold;
+        margin-bottom:0.6em;
+        color: #4d87c7;
+    }
+
+/* Branch/Content separation */
+
+    div.separation {
+        border-top: 3px #4D87C7 solid;
+        margin-top:2em;
+    }
+
+/* Branch definitions */
+
+    ul#node-branch {
+        font-size:1.2em;
+
+    }
+
+    ul#node-branch li {
+        float:left;
+        list-style-type: none;
+        padding:0;
+        margin:0.2em;
+        margin-left:0.1em;
+        margin-right:0.1em;
+    }
+    ul#node-branch li a {
+        text-decoration:underline;
+    }
+
+/* Branch tree definitions */
+    
+    li.item_content ul.node-branch-tree {
+        font-size:0.9em;
+
+    }
+    
+    li.item_content ul.node-branch-tree input {
+        width:0.5em !important;
+        height:0.5em !important;
+        margin:0;
+        padding:0;
+    }
+
+    li.item_content ul.node-branch-tree li {
+        list-style-type: circle !important;
+        padding:0;
+        margin:0em;
+        margin-left:0em;
+        margin-right:0em;
+        margin-bottom:0.8em;
+    }
+
+
+/* Node list definitions */
+
+    ul#node-list {
+        margin-bottom:0.8em;
+        margin-left:4em;
+
+    }
+
+    ul#node-list li {
+        clear:left;
+        font-size:1.4em;
+        list-style-type: disc;
+        padding:0;
+        margin:0;
+
+    }
+    
+    ul#node-list li h3 {
+        display:inline;
+        font-size: 1.1em;
+        margin: 0;
+        padding: 0;
+    }
+    
+    ul.list_attributes_default {
+        margin-left:0em;
+        margin-bottom:1em;
+    }
+    ul.list_attributes_default li {
+    list-style-type: none !important;
+        margin-bottom:0 !important;
+        padding-bottom:0 !important;
+        line-height:75%;
+    }
+    ul.list_attributes_default li h4 {
+        font-size: 0.5em !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+/* Node list items definitions */
+
+    ul#item-list {
+        font-size:1.2em;
+        margin-bottom:0.8em;
+        margin-left:4em;
+
+    }
+
+    ul#item-list li h3 {
+        display:inline;
+        font-size:1.0em;
+        padding:0;
+        margin:0;
+        color:#4D87C7;
+    }
+    
+    ul#item-list li {
+        clear:left;
+        font-size:1.2em;
+        list-style-type: circle;
+        padding:0;
+        margin:0;
+        margin-bottom:0.5em;
+    }
+    
+    ul#item-list li a {
+        font-size:0.8em;
+        text-decoration:underline;
+    }
+    
+    h2#item-list-head {
+        padding-left:1em;
+        font-size:1.6em;
+        color:#4D87C7;
+    }
+
+/* Status definitions */
+
+    .status-trash {
+        color:#990000 !important;
+    }
+
+    .status-inactive {
+        color:#000099 !important;
+    }
+
+    .status-active {
+        color:#009900 !important;
+    }
+
+
+/* Attribute groups definitions */
+
+    h2.attribute-group-list-header {
+        font-size:1.4em;
+        margin-bottom:0.8em;
+        margin-left:2em;
+        color:#0d4787;
+    }
+
+    ul.attribute-group-list {
+        font-size:1.4em;
+        margin-bottom:0.8em;
+        margin-left:4em;
+
+    }
+
+    ul.attribute-group-list li {
+        clear:left;
+        font-size:1.0em;
+        list-style-type: disc;
+        padding:0;
+        margin:0;
+
+    }
+    
+/* Tree definitions */
+
+    .status-trash {
+        color:#990000 !important;
+    }
+
+    .status-inactive {
+        color:#000099 !important;
+    }
+
+    .status-active {
+        color:#009900 !important;
+    }
+
+    div#tree {
+        font-size:1.4em;
+        padding:0;
+        margin:0;
+
+    }
+    div#tree a {
+        text-decoration:underline;
+    }
+    div#tree ul li{
+
+        list-style-type: none;
+
+
+    }
+    
+/* Import - Export */
+
+    #import-export {
+        margin-top:0.8em;
+        padding:1em;
+        border-top: 2px #4D87C7 solid;
+    }
+    
+    #import-export h2 {
+        padding:1em;
+        display:inline;
+        font-size:1.3em;
+    }
+    
+    input.sel-group {
+
+        display:inline;
+
+    }
+
+    #export-menu{
+        padding:0.3em;
+        margin-top:1.8em;
+        margin-left:1.8em;
+        font-size:1.2em;
+    }
+    
+    #export-file{
+        padding:0.5em;
+        margin-top:1.3em;
+        font-size:1.2em;
+        border-top: 2px #4D87C7 solid;
+    }
+    
+    #export-file h1{
+        font-size:1.3em;
+        color:#4D87C7;
+    }
+    
+    #import{
+        padding:0.7em;
+        font-size:1.2em;
+    }
+
+    
+/* ------ main admin menu --------- */
+    
+    #admin_menu {
+    	margin:1.5em;
+    }
+    
+    #admin_menu div{
+        float:left;
+    	padding:1.5em;
+    	margin-right:5em;
+    	border: 2px #4D87C7 solid;
+    	border-radius: 10px;
+    	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+    }
+    
+    #admin_menu div a{
+    	font-size:1.2em;
+    }
+    
+    #admin_menu li {
+    	margin-bottom:0.4em;
+    }
+    
+    #admin_menu div h2{
+    	font-size:1.2em;
+    	color:#4D87C7;
+    	font-weight:bold;
+    	letter-spacing:0.15em;
+    }
+    
+    #admin_menu ul{
+        float:left;
+    	padding:1em;
+    }
+    
+  /* ------ login --------- */
+    
+ul.login li{
+	list-style-type:none;
+	color:#000000;
+	margin-left:50px;
+	margin-bottom:40px;
+}
+
+li.login_label {
+	font-size: 1.2em;
+	color:#000000;
+	margin-bottom:10px !important;
+}
+
+li.login_content {
+	margin-left:40px;
+	font-size: 1.2em;
+	margin-bottom:25px;
+	color:#000000;
+}
+
+li.login_content input {
+	width:50%;
+}
+
+li.login_content select {
+	width:50%;
+	font-size: 1.0em;
+}
+
+li.login_content input {
+	padding:3px;
+	letter-spacing:3px;
+	font-size: 1em !important;
+}
+
+input#login_submit {
+	padding:3px;
+	font-size: 1.2em;
+	width:10em;
+}
+
+
+}

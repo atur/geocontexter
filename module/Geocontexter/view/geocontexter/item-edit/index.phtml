@@ -1,0 +1,473 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    /* jquery ui tabs */
+    $('#tabs').tabs({selected: <?php echo $this->tab_number; ?>});
+
+
+
+    $('#loading').hide();
+    $('div#item_search').hide();
+    $('div#item_search span').hide();
+
+    $("#attribute_group").change(function(){
+
+        var id_group = $('select#attribute_group option:selected').val();
+
+        if(id_group == '')
+        {
+            $('.new').remove();
+            $('.attribute_additional_head').remove();
+            return;
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/ajax-get-group-attributes-html",
+          data: ({id_group : id_group}),
+          success: function(data) {
+             $('.new').remove();
+             $(data).insertAfter('.attribute');
+          },
+          error: function(data) {
+            console.log(data);
+          }
+        });
+    });
+
+    $('')
+        $('#loading')
+        .ajaxStart(function() {
+        $(this).show();
+        }).ajaxStop(function() {
+        $(this).hide();
+        });
+
+
+    $(".add_item_list").click(function(){
+      new_window = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list-select/index/callback_num/<?php echo $this->item_list_callback_number; ?>",
+                               "Lists",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+    $(".add_keyword").click(function(){
+      new_kwindow = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword-select/index/callback_num/<?php echo $this->item_keyword_callback_number; ?>",
+                               "Keywords",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_kwindow.focus();
+    });
+
+    $(".add_item_list_keyword").click(function(){
+      new_kwindow = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword-select/index/callback_num/<?php echo $this->item_list_keyword_callback_number; ?>",
+                               "Keywordslist",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_kwindow.focus();
+    });
+
+    $('.remove_item_synonym').live('click',function() {
+
+        var syn = $("#remove_synonym_of").attr("value");
+
+        if(syn == '')
+        {
+            $("input#remove_synonym_of").attr("value","<?php if($this->item_result['synonym_of'] != NULL) echo $escape->escapeHtmlAttr($this->item_result['synonym_of']); ?>");
+            $("li.synonyms").attr('style','text-decoration:line-through;');
+        }else{
+            $("input#remove_synonym_of").attr("value","");
+            $("li.synonyms").attr('style','');
+        }
+    });
+
+    $('.change_item_synonym').live('click',function() {
+      if($('.change_synonym_info').is(':visible')){
+          $('.change_synonym_info').hide('slow');
+          $('div#item_search').hide('slow');
+          $("input.search_type[value='item']").attr('checked','');
+          $("input#search_select").attr('value','');
+          $("input#callback_num").detach();
+      }else{
+        $('.change_synonym_info').show('slow');
+        $('div#item_search').show('slow');
+        $("input.search_type[value='item']").attr('checked','checked');
+        $("input#search_select").attr('value','item');
+        $("input#search_select").after('<input name="callback_num" id="callback_num" type="hidden" value="<?php echo $this->item_synonym_callback_number; ?>" />');
+      }
+    });
+
+    $('.remove_item_list').toggle(function() {
+      $('.delete_item_list').show();
+    }, function() {
+        $('.delete_item_list').hide();
+    });
+
+    $('.remove_keyword').toggle(function() {
+      $('.delete_keyword').show();
+      var selected = $( "#tabs" ).tabs( "option", "selected" );
+      $("#tab_number").attr("value", selected);
+    }, function() {
+      $('.delete_keyword').hide();
+      $("#tab_number").attr("value", '');
+    });
+
+    $('.remove_item_list_keyword').toggle(function() {
+      $('.delete_item_list_keyword').show();
+      var selected = $( "#tabs" ).tabs( "option", "selected" );
+      $("#tab_number").attr("value", selected);
+    }, function() {
+      $('.delete_item_list_keyword').hide();
+      $("#tab_number").attr("value", '');
+    });
+
+    $("#save").click(function(){
+      var selected = $( "#tabs" ).tabs( "option", "selected" );
+      $("#tab_number").attr("value", selected);
+    });
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Edit Item <?php echo $escape->escapeHtml($this->item_result['title']); ?></h1>
+
+    <?php if(count($this->error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($this->error as $error): ?>
+            <h3><?php echo $this->escape($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" enctype="multipart/form-data" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/item-edit/update" accept-charset="utf-8">
+
+    <input type="hidden" name="id_item" value="<?php echo $this->item_result['id_item']; ?>" />
+    <input type="hidden" name="id_list" value="<?php echo $this->id_list; ?>" />
+    <input type="hidden" id="class_name" name="class_name" value="" />
+    <input type="hidden" id="tab_number" name="tab_number" value="" />
+    <input type="hidden" id="remove_synonym_of" name="remove_synonym_of" value="" />
+
+  <div id="tabs">
+    <ul role="navigation" title="edit item">
+      <li><a href="#tabs-1">Item</a></li>
+      <li><a href="#tabs-2">Lists</a></li>
+      <li><a href="#tabs-3">Keywords</a></li>
+      <?php if(false !== $this->item_list_keyword_callback_number): ?>
+      <li><a href="#tabs-4">List keywords</a></li>
+      <?php endif; ?>
+      <li><a href="#tabs-5">Attributes</a></li>
+      <li><a href="#tabs-6">Images</a></li>
+      <li><a href="#tabs-7">Files</a></li>
+    </ul>
+    <div id="tabs-1">
+        <ul class="ul-form">
+      <li class="item_label"><h2><label for="item_name" id="l_item_name">Item title:</label></h2></li>
+      <li class="item_content">
+        <input aria-required="true"
+               aria-labelledby="l_item_name"
+               name="item_name"
+               id="item_name"
+               tabindex="1"
+               type="text"
+               size="40"
+               maxlength="255"
+               value="<?php echo $escape->escapeHtml($this->item_result['title']); ?>" />
+      </li>
+
+        <li class="item_label"><h2><label for="id_node-branch-tree_1" id="l_id_node-branch-tree_2">Item is synonym of:</label></h2></li>
+        <li class="item_content">
+            <div class="node-branch-tree-content">
+            <ul class="node-branch-tree" id="id_node-branch-tree_1">
+            <?php if(count( $this->synonym_result) > 0): ?>
+
+            <?php foreach( $this->synonym_result as $synonym): ?>
+                <li class="synonyms"><?php  echo $escape->escapeHtml($synonym['branch']); ?>/<?php  echo $escape->escapeHtml($synonym['item_title']); ?></li>
+            <?php endforeach; ?>
+            <?php else: ?>
+            no synonym
+            <?php endif; ?>
+            </ul>
+            </div>
+
+            <p class="change_synonym_info" style="display:none;">use the box to the right to search for synonym.</p>
+
+            <a href="#none" class="change_item_synonym">change item synonym</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <?php if(count($this->synonym_result) > 0): ?>
+              <a href="#none" class="remove_item_synonym">remove item synonym</a>
+            <?php endif; ?>
+        </li>
+
+      <li class="item_label"><h2><label for="item_id_status" id="is">Item status:</label></h2></li>
+      <li class="item_content">
+                  <select name="item_id_status" id="item_id_status" size="1" tabindex="3">
+                  <option value="0"<?php if($this->item_result['id_status']==0): ?> selected="selected" class="selected"<?php endif; ?>>trash&nbsp;&nbsp;</option>
+                  <option value="100"<?php if($this->item_result['id_status']==100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+                  <option value="200"<?php if($this->item_result['id_status']==200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+                  </select>
+      </li>
+
+      <li class="item_label"><h2><label for="item_lang" id="clang">Item language:</label></h2></li>
+      <li class="item_content">
+      <select name="item_lang" id="item_lang" size="1" lang="en" tabindex="4">
+              <?php foreach($this->languages as $val):  ?>
+      <option value="<?php echo $escape->escapeHtml($val['lang']); ?>"<?php if($this->item_result['lang']==$val['lang']): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['description']); ?></option>
+      <?php endforeach; ?>
+      </select>
+      </li>
+
+      <li class="item_label"><h2><label for="item_description" id="agd">Item description:</label></h2></li>
+      <li class="item_content">
+              <textarea name="item_description"
+                        id="item_description"
+                        aria-labelledby="agd"
+                        tabindex="5"
+                        cols="50"
+                        rows="5"><?php echo $escape->escapeHtml($this->item_result['description']); ?></textarea>
+      </li>
+      </ul>
+    </div>
+    <div id="tabs-2">
+      <ul class="ul-form">
+      <li class="item_label"><h2><label for="id_node-branch-tree" id="l_id_node-branch-tree">Item lists:</label></h2></li>
+      <li class="item_content">
+      <div class="node-branch-tree-content">
+      <ul class="node-branch-tree" id="id_node-branch-tree">
+      <?php foreach( $this->lists_result as $list): ?>
+      <li><a title="move list up: <?php  echo $list['title']; ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list_item/<?php echo $list['id_list_item']; ?>/id_list/<?php echo $this->id_list; ?>/moveUp/1/tab_number/1">&uarr;</a>
+          <a title="move list down: <?php  echo $list['title']; ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list_item/<?php echo $list['id_list_item']; ?>/id_list/<?php echo $this->id_list; ?>/moveDown/1/tab_number/1">&darr;</a>
+
+         &nbsp;
+         <input type="checkbox"
+          style="display:none;"
+          class="delete_item_list"
+          name="delete_id_list[]"
+          value="<?php echo $list['id_list']; ?>"
+          title="check to delete" /> <?php  echo $escape->escapeHtml($list['branch']); ?>/</li>
+      <?php endforeach; ?>
+      </ul>
+      </div>
+
+      <a href="#none" class="add_item_list">add item list</a>
+      <?php if(count($this->lists_result) > 1): ?>
+      <a href="#none" class="remove_item_list">remove item list</a>
+      <?php endif; ?>
+      </li>
+      </ul>
+    </div>
+    <div id="tabs-3">
+      <ul class="ul-form">
+      <li class="item_label"><h2><label for="d_item_keywords" id="l_d_item_keywords">Item keywords:</label></h2></li>
+      <li class="item_content">
+          <div class="node-branch-tree-content">
+          <ul class="d_item_keywords" id="d_item_keywords">
+          <?php foreach( $this->keywords_result as $keyword): ?>
+              <li><input type="checkbox" style="display:none;" class="delete_keyword" name="delete_id_keyword[]" value="<?php echo $keyword['id_keyword']; ?>" /> <?php  echo $escape->escapeHtml($keyword['branch']); ?>/</li>
+          <?php endforeach; ?>
+          </ul>
+          </div>
+
+          <a href="#none" class="add_keyword">add keyword</a>
+          <?php if(count($this->keywords_result) > 0): ?>
+            &nbsp;&nbsp;&nbsp;&nbsp; <a href="#none" class="remove_keyword">remove keyword</a>
+          <?php endif; ?>
+      </li>
+      </ul>
+    </div>
+
+    <?php if(false !== $this->item_list_keyword_callback_number): ?>
+    <div id="tabs-4">
+      <ul class="ul-form">
+      <li class="item_label"><h2><label for="item_id_parent" id="cpa">Item keywords for list:</label></h2></li>
+      <li class="item_content">
+          <p><strong>Root/<?php  echo $this->list_result['branch']; ?></strong></p>
+          <div class="node-branch-tree-content">
+          <ul class="node-branch-tree">
+          <?php foreach( $this->item_list_keywords_result as $keyword): ?>
+              <li><input type="checkbox" style="display:none;" class="delete_item_list_keyword" name="delete_item_list_id_keyword[]" value="<?php echo $escape->escapeHtmlAttr($keyword['id_keyword']); ?>" /> <?php  echo $escape->escapeHtml($keyword['branch']); ?>/</li>
+          <?php endforeach; ?>
+          </ul>
+          </div>
+
+          <a href="#none" class="add_item_list_keyword">add keyword</a>
+          <?php if(count($this->item_list_keywords_result) > 0): ?>
+            &nbsp;&nbsp;&nbsp;&nbsp; <a href="#none" class="remove_item_list_keyword">remove keyword</a>
+          <?php endif; ?>
+      </li>
+      </ul>
+    </div>
+    <?php endif; ?>
+
+    <div id="tabs-5">
+
+      <ul class="ul-form attribute" title="select additional attributes from a group">
+          <li class="item_label"><h2><label for="attribute_group" id="agroup">Attribute group:</label></h2></li>
+          <li class="item_content loading">
+          <select name="attribute_group" id="attribute_group" size="1" lang="en" tabindex="6">
+              <option value=""></option>
+              <?php foreach($this->attribute_groups as $val):  ?>
+              <option value="<?php echo $escape->escapeHtmlAttr($val['id_group']); ?>"<?php if(strcmp($this->item_result['id_attribute_group'], $val['id_group'])==0): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['title']); ?>  </option>
+              <?php endforeach; ?>
+              </select>
+
+          <img id="loading" src="<?php echo $basePath; ?>/admin_media/images/loading-red.gif" alt="loading additional attributes...please wait" />
+          </li>
+      </ul>
+
+
+    <?php if(isset($additionalAttributes)): ?>
+
+      <h2 class="attribute_additional_head">Additional list attributes</h2>
+      <?php echo $this->partial('layout/_additional_attributes.phtml', 
+                                $additionalAttributes); ?>
+    <?php endif; ?>
+
+    </div>
+
+    <div id="tabs-6">
+        <input name="item_image" type="file" size="50" maxlength="5000000" accept="image/*" />
+        <input type="submit" value="Upload Image" />
+
+
+        <?php if(count($this->item_images) > 0): ?>
+        <ul id="image_list">
+          <?php foreach($this->item_images as $image): ?>
+          <li><div class="image_name"><?php echo $escape->escapeHtml($image['file_name']); ?> <span>(<?php echo $escape->escapeHtml($image['file_size']); ?> bytes)</span></div>
+            <div class="subcolumns">
+              <div class="c33l">
+                <div class="subcolumns">
+                  <div class="c25l">
+                      <a title="move image up: <?php  echo $escape->escapeHtml($image['file_name']); ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list/<?php echo $this->id_list; ?>/imageMoveUp/<?php echo $escape->escapeHtml($image['id_image']); ?>/tab_number/5">&uarr;</a><br />
+                      <a title="move image down: <?php  echo $escape->escapeHtml($image['file_name']); ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list/<?php echo $this->id_list; ?>/imageMoveDown/<?php echo $escape->escapeHtmlAttr($image['id_image']); ?>/tab_number/5">&darr;</a>
+                      <br /><br /><br />
+                      <a class="delete_image" title="delete image: <?php  echo $this->escape($image['file_name']); ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list/<?php echo $this->id_list; ?>/deleteImage/<?php echo $escape->escapeHtml($image['id_image']); ?>/tab_number/6">delete</a>
+                  </div>
+                  <div class="c75r">
+                      <a href="<?php echo $basePath; ?>/data/gc_item/<?php echo $this->escape($this->item_result['files_folder']); ?>/<?php echo $this->escape($image['file_name']); ?>" target="_blank"><img width="140" src="<?php echo $basePath; ?>/data/gc_item/<?php echo $escape->escapeHtml($this->item_result['files_folder']); ?>/thumb-<?php echo $escape->escapeHtml($image['file_name']); ?>" /></a>
+                  </div>
+                </div>
+
+              </div>
+              <div class="c66r item_image_form">
+                  <input type="hidden" name="id_image[]" value="<?php echo $escape->escapeHtml($image['id_image']); ?>" />
+
+                  <input aria-required="true"
+                         aria-labelledby="l_item_name"
+                         name="image_title[]"
+                         id="image_title"
+                         tabindex="1"
+                         type="text"
+                         size="40"
+                         maxlength="255"
+                         title="Image title"
+                         value="<?php echo $escape->escapeHtml($image['title']); ?>" />
+
+                        <textarea name="image_description[]"
+                                  id="image_description"
+                                  aria-labelledby="agd"
+                                  title="Image description"
+                                  tabindex="5"
+                                  cols="50"
+                                  rows="3"><?php echo $escape->escapeHtml($image['description']); ?></textarea>
+              </div>
+            </div>
+          </li>
+          <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
+    </div>
+
+    <div id="tabs-7" class="item_edit">
+        <input name="item_file" type="file" size="50" maxlength="5000000" />
+        <input type="submit" value="Upload File" />
+
+        <?php if(count($this->item_files) > 0): ?>
+        <ul id="file_list" role="navigation" title="item files">
+          <?php foreach($this->item_files as $file): ?>
+          <li><div class="file_name"><a title="download file" href="<?php echo $basePath; ?>/data/gc_item/<?php echo $this->escape($this->item_result['files_folder']); ?>/<?php echo $escape->escapeHtml($file['file_name']); ?>" class="item_file_name" ><?php echo $escape->escapeHtml($file['file_name']); ?></a> <span title="file size">(<?php echo $escape->escapeHtml($file['file_size']); ?> bytes)</span></div>
+            <div class="floatbox">
+              <div style="width:8%;float:left;">
+                  <a title="move file up: <?php  echo $this->escape($file['file_name']); ?>" class="action" href="<?php echo $basePath; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list/<?php echo $this->id_list; ?>/fileMoveUp/<?php echo $escape->escapeHtml($file['id_file']); ?>/tab_number/6">&uarr;</a><br />
+                  <a title="move file down: <?php  echo $this->escape($file['file_name']); ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list/<?php echo $this->id_list; ?>/fileMoveDown/<?php echo $escape->escapeHtml($file['id_file']); ?>/tab_number/6">&darr;</a>
+                  <br /><br /><br />
+                  <a class="delete_file" title="delete file: <?php  echo $this->escape($file['file_name']); ?>" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/itemEdit/index/id_item/<?php echo $this->item_result['id_item']; ?>/id_list/<?php echo $this->id_list; ?>/deleteFile/<?php echo $escape->escapeHtml($file['id_file']); ?>/tab_number/6">delete</a>
+              </div>
+              <div class="item_file_form">
+
+
+                  <input type="hidden" name="id_file[]" value="<?php echo $escape->escapeHtml($file['id_file']); ?>" />
+
+                  <input aria-required="true"
+                         aria-labelledby="l_item_name"
+                         name="file_title[]"
+                         id="file_title"
+                         type="text"
+                         size="40"
+                         maxlength="255"
+                         title="File title"
+                         value="<?php echo $escape->escapeHtml($file['title']); ?>" />
+
+                        <textarea name="file_description[]"
+                                  aria-labelledby="agd"
+                                  title="File description"
+                                  rows="3"><?php echo $escape->escapeHtml($file['description']); ?></textarea>
+              </div>
+            </div>
+          </li>
+          <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
+    </div>
+  </div>
+
+
+    <ul class="ul-form" title="additional list attributes">
+        <li class="item_label"><h2><label for="submit" id="sub">Update item or cancel:</label></h2></li>
+        <li class="item_content">
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="add"
+                   tabindex="<?php echo $this->tabindex_after_attributes; ?>"
+                   title="save and leave this page"
+                   id="submit"
+                   value="Submit" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="save"
+                   tabindex="<?php echo $this->tabindex_after_attributes; ?>"
+                   title="save and stay on this page"
+                   id="save"
+                   value="Save" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   tabindex="<?php echo $this->tabindex_after_attributes + 1; ?>"
+                   title="do nothing and leave this page"
+                   id="cancel"
+                   value="Cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_list_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

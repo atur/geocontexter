@@ -1,0 +1,104 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Add project</h1>
+
+    <ul id="node-branch" role="navigation">
+    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project/index/id_project/0">Root</a>/</li>
+    <?php foreach( $this->project_branch_result as $branch): ?>
+        <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project/index/id_project/<?php  echo $branch['id_project']; ?>"><?php  echo $escape->escapeHtml($branch['title']); ?></a>/</li>
+    <?php endforeach; ?>
+    </ul>
+
+    <div class="separation">&nbsp;</div>
+
+    <?php if(count($this->error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($this->error as $error): ?>
+            <h3><?php echo $escape->escapeHtml($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-add/add" accept-charset="utf-8">
+    <input type="hidden" name="id_project" value="<?php echo $this->id_project; ?>" />
+    <ul class="ul-form">
+        <li class="item_label"><h2><label for="project_name" id="agn">Project title:</label></h2></li>
+        <li class="item_content">
+                <input aria-required="true"
+                       aria-labelledby="agn"
+                       name="project_name"
+                       id="project_name"
+                       tabindex="1"
+                       type="text"
+                       size="40"
+                       maxlength="255"
+                       value="<?php echo $escape->escapeHtmlAttr($this->project_name); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label for="project_id_status" id="is">Project status:</label></h2></li>
+        <li class="item_content">
+                    <select name="project_id_status" id="project_id_status" size="1" tabindex="3">
+                    <option value="100"<?php if($this->project_id_status==100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+                    <option value="200"<?php if($this->project_id_status==200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+                    <option value="300"<?php if($this->project_id_status==300): ?> selected="selected" class="selected"<?php endif; ?>>restricted to registered users&nbsp;&nbsp;</option>
+                    <option value="400"<?php if($this->project_id_status==400): ?> selected="selected" class="selected"<?php endif; ?>>restricted to registered project users&nbsp;&nbsp;</option>
+                    </select>
+        </li>
+
+        <li class="item_label"><h2><label for="project_lang" id="clang">Project language:</label></h2></li>
+        <li class="item_content">
+        <select name="project_lang" id="project_lang" size="1" lang="en" tabindex="4">
+                <?php foreach($this->languages as $val):  ?>
+    <option value="<?php echo $escape->escapeHtmlAttr($val['lang']); ?>"<?php if($this->project_lang==$val['lang']): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['description']); ?></option>
+    <?php endforeach; ?>
+    </select>
+        </li>
+
+        <li class="item_label"><h2><label for="project_description" id="agd">Project description:</label></h2></li>
+        <li class="item_content">
+                <textarea name="project_description"
+                          id="project_description"
+                          aria-labelledby="agd"
+                          tabindex="5"
+                          cols="50"
+                          rows="5"><?php echo $escape->escapeHtml($this->project_description); ?></textarea>
+        </li>
+
+    </ul>
+
+    <ul class="ul-form" title="additional project attributes">
+        <li class="item_label"><h2><label for="submit" id="sub">Submit new project or cancel:</label></h2></li>
+        <li class="item_content">
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="add"
+                   id="submit"
+                   value="Submit" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   id="cancel"
+                   value="Cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_project_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

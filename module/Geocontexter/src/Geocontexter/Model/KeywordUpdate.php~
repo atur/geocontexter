@@ -1,0 +1,215 @@
+<?php
+/**
+ * GeoContexter
+ * @link http://code.google.com/p/geocontexter/
+ * @package GeoContexter
+ */
+
+/**
+ * Update keyword
+ *
+   USAGE:
+   <pre>
+
+   $KeywordUpdate = $this->CoreModel('KeywordUpdate');
+
+   $params  = array('id_keyword' => bigint,
+                    'data'    => array('title'              => string,
+                                       'description'        => string,
+                                       'id_parent'          => bigint,
+                                       'id_attribute_group' => bigint (string),
+                                       'id_status'          => smallint));
+
+   $result  = $KeywordUpdate->run( $params );
+
+   if ($result instanceof \Core\Library\Exception) {
+       return $this->error( $result->getMessage(), __file__, __line__);
+   }
+
+   </pre>
+ * @package GeoContexter
+ * @subpackage Module_Geocontexter
+ * @license http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @author Armand Turpel <geocontexter@gmail.com>
+ * @version $Rev: 828 $ / $LastChangedDate: 2011-02-27 10:30:28 +0100 (So, 27 Feb 2011) $ / $LastChangedBy: armand.turpel $
+ */
+
+namespace Geocontexter\Model;
+
+use Core\Model\AbstractModel;
+
+class KeywordUpdate extends    AbstractModel
+{
+    /**
+     * allowed fields
+     *
+     *
+     * @param array $allowed_fields
+     */
+    private $allowed_fields = array('title'              => true,
+                                    'description'        => true,
+                                    'id_parent'          => true,
+                                    'id_attribute_group' => true,
+                                    'id_status'          => true,
+                                    'lang'               => true,
+                                    'attribute_value'    => true
+                                    );
+
+    /**
+     * update keyword
+     *
+     *
+     * @param array $params
+     */
+    public function run( $params )
+    {
+        try {
+
+            $this->beginTransaction();
+
+            $this->validate_params($params);
+
+            $params['data']['update_time'] = new \Zend\Db\Sql\Expression("CURRENT_TIMESTAMP(0) AT TIME ZONE 'UTC'");
+
+            $this->update('gc_keyword', 'geocontexter', $params['data'], array('id_keyword' => $params['id_keyword']));
+
+            // we need the trash instance to move ids to and from trash
+            //
+            $trash = $this->CoreModel('Trash');
+
+            if ($params['data']['id_status'] == 0) {
+                $trash->toTrash( $params['id_keyword'], 4 );
+            } else {
+                // remove id from trash if present
+                $trash->undoTrash( $params['id_keyword'], 4 );
+            }
+
+            $_sql   = 'SELECT id_keyword FROM geocontexter.gc_keyword_get_all_childs(?)';
+            $result = $this->query($_sql, array($params['id_keyword']));
+
+            if (is_array($result) && (count($result) > 0)) {
+                $__in  = "";
+                $comma = "";
+
+                foreach ($result as $row) {
+                    $__in .= $comma . $row['id_keyword'];
+                    $comma = ",";
+
+                    if ($params['data']['id_status'] == 0) {
+                        $trash->toTrash( $row['id_keyword'], 4 );
+                    } else {
+                        // remove id from trash if present
+                        $trash->undoTrash( $row['id_keyword'], 4 );
+                    }
+                }
+
+                $__params                = array();
+                $__params['update_time'] = new \Zend\Db\Sql\Expression("CURRENT_TIMESTAMP(0) AT TIME ZONE 'UTC'");
+                $__params['id_status']   = $params['data']['id_status'];
+
+                $this->update('gc_keyword', 'geocontexter', $__params, array("id_keyword IN ('$__in')"));
+            }
+
+            $this->commit();
+
+        } catch(\Exception $e) {
+            $this->rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * update keyword id_parent
+     *
+     * this methode is only called from the geocontexter keywordSelectController
+     *
+     *
+     * @param array $params
+     */
+    public function updateKeywordParent( & $params )
+    {
+        $data = array();
+
+        try {
+
+            $this->beginTransaction();
+
+            if (!isset($params['id_parent'])) {
+                throw new \Exception('id_parent field isnt defined');
+            }
+
+            $val_digits = new \Zend\Validator\Digits();
+
+            if (false === $val_digits->isValid($params['id_parent'])) {
+                throw new \Exception('id_parent isnt from type bigint');
+            }
+
+            if (!isset($params['id_keyword'])) {
+                throw new \Exception('id_keyword field isnt defined');
+            }
+
+            if(false === $val_digits->isValid($params['id_keyword'])) {
+                throw new \Exception('id_keyword isnt from type bigint');
+            }
+
+            // fetch old id_parent
+            //
+            $old_id_parent = $this->query('SELECT id_parent FROM geocontexter.gc_keyword WHERE id_keyword = ?', array($params['id_keyword']));
+
+            $data['id_parent']       = new \Zend\Db\Sql\Expression($params['id_parent']);
+
+            $data['update_time']     = new \Zend\Db\Sql\Expression("CURRENT_TIMESTAMP(0) AT TIME ZONE 'UTC'");
+
+            $data['preferred_order'] = new \Zend\Db\Sql\Expression("geocontexter.gc_get_new_entry_order('gc_keyword', 'id_parent', {$params['id_parent']})");
+
+            $this->update('gc_keyword', 'geocontexter', $data, array('id_keyword' => $params['id_keyword']));
+
+            // correct old id_parent preferred_order
+            //
+            $this->query('SELECT geocontexter.gc_keyword_correct_preferred_order(?)', array($old_id_parent[0]['id_parent']));
+
+            $this->commit();
+
+        } catch(\Exception $e) {
+            $this->rollback();
+            throw $e;
+        }
+    }
+
+    /**
+     * set and validate parameters
+     *
+     *
+     * @param array $params
+     */
+    private function validate_params( & $params )
+    {
+        if (!isset($params['data'])) {
+            throw new \Exception('data array isnt defined');
+        }
+
+        foreach ($params['data'] as $key => $val) {
+            if (!isset($this->allowed_fields[$key])) {
+                throw new \Exception('Field isnt allowed: ' . $key);
+            }
+        }
+
+        if (isset($params['data']['title'])) {
+            if (empty($params['data']['title'])) {
+                throw new \Exception('keyword title is empty');
+            }
+        }
+
+        if (!isset($params['id_keyword'])){
+            throw new \Exception('id_keyword field isnt defined');
+        }
+
+        $val_digits = new \Zend\Validator\Digits();
+
+        if (false === $val_digits->isValid($params['id_keyword'])) {
+            throw new \Exception('id_keyword isnt from type bigint: ' . var_export($params['id_keyword'],true));
+        }
+
+
+    }
+}

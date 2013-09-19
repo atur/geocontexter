@@ -1,0 +1,98 @@
+<script type="text/javascript">
+
+<?php if(isset($close)): ?>
+
+window.opener.location.href = '<?php echo $this->opener_url; ?>';
+self.close();
+
+<?php else: ?>
+
+ $(document).ready(function() {
+
+
+ });
+
+<?php endif; ?>
+
+</script>
+
+<form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/item-search/submit" accept-charset="utf-8">
+
+<input type="hidden" name="callback_num" value="<?php echo $callback_num; ?>" />
+
+<div class="page2">
+
+<div class="floatbox">
+
+</div>
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="submit"
+                   id="submit1"
+                   value="Submit" />
+
+<div id="search_result">
+<?php if(count($this->result) > 0): ?>
+
+          <?php  echo $this->paginationControl($this->paginator, 'Sliding', 
+	    	'item-search-slide', 
+	    	array('item'         => $this->item_search_string,
+	    	      'callback_num' => $callback_num)); ?>
+
+<ul id="node-list">
+<?php foreach( $this->result as $val): ?>
+    <li <?php if($val['id_status']==0): ?>
+        class="status-trash" title="trash"
+        <?php elseif($val['id_status']==100): ?>
+        class="status-inactive" title="inactive"
+        <?php elseif($val['id_status']==200): ?>
+        class="status-active" title="active"
+        <?php endif; ?>>
+        <input type="radio" name="_id" value="<?php echo $val['id_item']; ?>" />
+
+        <h3><?php  echo $escape->escapeHtml($val['title']); ?></h3
+
+        <?php if(isset($val['lists']) && is_array($val['lists'])): ?>
+        <br />
+        <?php foreach($val['lists'] as $list): ?>
+        <p class="search_list_branch" title="preferred list">Root/<?php  echo $escape->escapeHtml($list['branch']); ?></p>
+        <?php endforeach; ?>
+        <?php else: ?>
+          <p class="search_list_branch">Root/<?php  echo $val['branch']; ?></p>
+        <?php endif; ?>
+
+        <?php if(isset($val['attributes']) && (count($val['attributes']) > 0)): ?>
+        <ul class="list_attributes_default">
+        <?php foreach( $val['attributes'] as $attr): ?>
+          <li><h4><?php echo $attr['info']['attribute_title']; ?>: <?php echo $escape->escapeHtml( $attr['value'] ); ?></h4></li>
+        <?php endforeach; ?>
+        </ul>
+        <?php endif; ?>
+        </li>
+<?php endforeach; ?>
+</ul>
+
+          <?php  echo $this->paginationControl($this->paginator, 'Sliding', 
+	    	'item-search-slide', array('item'         => $this->item_search_string,
+	    	                           'callback_num' => $callback_num)); ?>
+
+<?php else: ?>
+
+  <p>no result</p>
+
+<?php endif; ?>
+</div>
+
+
+</div>
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="submit"
+                   id="submit2"
+                   value="Submit" />
+
+</form>

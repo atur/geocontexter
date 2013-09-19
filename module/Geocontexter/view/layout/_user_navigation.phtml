@@ -1,0 +1,12 @@
+<ul id="right_sub_navigaion" role="navigation">
+  <?php if($this->active_page == 'main'): ?>
+  <li class="select">Attribute</li>
+  <?php else: ?>
+  <li><a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->adminAreaToken; ?>/geocontexter/user/index">User main</a></li>
+  <?php endif; ?>
+  <?php if($this->active_page == 'add'): ?>
+  <li class="select">Add user</li>
+  <?php else: ?>
+  <li><a href="<?php echo $this->baseUrl(); ?>/<?php echo $this->adminAreaToken; ?>/geocontexter/user-add/index">Add user</a></li>
+  <?php endif; ?>
+</ul>

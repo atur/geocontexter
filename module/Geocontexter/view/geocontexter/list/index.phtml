@@ -1,0 +1,304 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+
+    /* -- ask for deleting attribute group -- */
+
+    $("a.attr_group_delete").click(function(event)
+    {
+        title = $(this).parent().parent().children("a:first").html();
+        check = confirm("Delete group '" + title + "'");
+        if (check == false)
+        {
+            event.preventDefault();
+            return;
+        }
+    });
+
+    /* -- show export form -- */
+
+    $("a.export").click(function()
+    {
+        $('div#import').hide('slow');
+        $('#export-menu').toggle('slow');
+        $('input.sel-group').toggle();
+        $('#export-file').hide('slow');
+        $('#export-file a').remove();
+    });
+
+    /* -- show import form -- */
+
+    $("a.import").click(function()
+    {
+        $('input.sel-group').hide();
+        $('#export-menu').hide('slow');
+        $('div#import').toggle('slow');
+    });
+
+    /* -- hide loading image and export file if present -- */
+
+        $('#loading').hide();
+        $('#export-file').hide();
+
+    /* -- handle export -- */
+
+    $("#export-button").click(function(){
+
+        var id_lists = [];
+
+            /* -- load all checked id_groups in array -- */
+        $('#upload input:checked').each(function()
+        {
+            id_lists.push($(this).val());
+        });
+
+        if(id_lists.length == 0)
+        {
+            alert('no list selected');
+            return;
+        }
+
+        $.ajax({
+          type: "POST",
+          dataType: 'json',
+          url: "<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/json-get-list-export",
+          data: ({id_lists : id_lists}),
+          success: function(data) {
+             if(!data)
+             {
+                html = '<p>Error creating export file</p>';
+             }
+             else if(data['error'])
+             {
+              html = '<p>Error creating export file: ' + data['error'] + '</p>';
+             }
+             else
+             {
+              html = '<a href="<?php echo $basePath; ?>/data/export/'+data['file']+'">'+data['file']+'</a>';
+             }
+
+             /* -- hide export form -- */
+             $('#export-menu').toggle('slow');
+             $('input.sel-group').toggle();
+
+             /* -- show export file -- */
+             $(html).insertAfter('.export-head');
+             $('#export-file').show('slow');
+          },
+          error: function(data) {
+             html = '<p>Error creating export file</p>';
+             $('#export-menu').toggle('slow');
+             $('input.sel-group').toggle();
+
+             $(html).insertAfter('.export-head');
+             $('#export-file').show('slow');
+          }
+        });
+    });
+
+    /* -- search for lists or list items -- */
+
+    $("#search_button").click(function(){
+
+        $('#main_list').hide('slow');
+        $('#main_search').show('slow');
+
+        var search_str  = $('#search').val().replace(/\\/,'');search_type
+        var search_type = $('.search_type:input:checked').val();
+
+        $('#head_search_type').html(search_type);
+        $('#head_search_str').html(search_str);
+
+        if(search_str == '')
+        {
+            $('.search_warning').remove();
+            $('#main_search').append('<p class="search_warning">search string is empty</p>');
+            return;
+        }
+
+        $.ajax({
+          type: "POST",
+          dataType: 'html',
+          url: "<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/search-list-or-item",
+          data: ({search : search_str,
+                  type   : search_type}),
+          success: function(data) {
+             if(!data)
+             {
+                html = '<p>Error creating export file</p>';
+             }
+             else if(data['error'])
+             {
+                html = '<p>Error creating export file: ' + data['error'] + '</p>';
+             }
+             else
+             {
+                $('#search_result').remove();
+                $('#main_search').append(data);
+             }
+          },
+          error: function(data) {
+             html = '<p>Error creating export file</p>';
+             $('#export-menu').toggle('slow');
+             $('input.sel-group').toggle();
+
+             $(html).insertAfter('.export-head');
+             $('#export-file').show('slow');
+          }
+        });
+    });
+    $("#close_search").click(function(){
+        $('#main_search').hide();
+        $('#main_list').show('slow');
+    });
+
+    $('')
+        $('#loading')
+        .ajaxStart(function() {
+        $(this).show();
+        }).ajaxStop(function() {
+        $(this).hide();
+        });
+
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <div id="main_list">
+
+        <form name="upload" id="upload" enctype="multipart/form-data" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/export" accept-charset="utf-8">
+
+            <h1 id="page_head">List</h1>
+
+            <ul id="node-branch" role="navigation" title="list branch">
+            <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/index/id_list/0">Root</a>/</li>
+            <?php foreach( $list_branch_result as $branch): ?>
+                <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/index/id_list/<?php  echo $branch['id_list']; ?>"><?php  echo $escape->escapeHtml($branch['title']); ?></a>/</li>
+            <?php endforeach; ?>
+            </ul>
+
+            <div class="separation">&nbsp;</div>
+
+            <?php if(count($list_result) > 0): ?>
+
+            <ul id="node-list">
+            <?php foreach( $list_result as $list): ?>
+                <li <?php if($list['id_status']==0): ?>
+                    class="status-trash" title="trash"
+                    <?php elseif($list['id_status']==100): ?>
+                    class="status-inactive" title="inactive"
+                    <?php elseif($list['id_status']==200): ?>
+                    class="status-active" title="active"
+                    <?php endif; ?>><input class="sel-group" style="display: none" name="id_list_export[]" type="checkbox" value="<?php  echo $list['id_list']; ?>" /><h3><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/index/id_list/<?php  echo $list['id_list']; ?>"><?php  echo $escape->escapeHtml($list['title']); ?></a></h3>
+                    <span class="additional-link-info">(<abbr title="Number of child lists"><?php  echo $list['num_childs']; ?></abbr>)
+                    <?php if($list['system_serial'] != 'NULL'): ?>
+                    <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list-edit/index/id_list/<?php  echo $list['id_list']; ?>">edit</a>
+                    <?php endif; ?>
+                    </span>
+
+                    <?php if(isset($list['attributes']) && is_array($list['attributes']) && (count($list['attributes']) > 0)): ?>
+                      <ul class="list_attributes_default">
+                      <?php foreach( $list['attributes'] as $attr ): ?>
+                          <li><h4><?php echo $attr['info']['attribute_title']; ?>: <?php echo $escape->escapeHtml( $attr['value'] ); ?></h4></li>
+                      <?php endforeach; ?>
+                      </ul>
+                    <?php endif; ?>
+
+                    </li>
+            <?php endforeach; ?>
+            </ul>
+
+            <div class="separation">&nbsp;</div>
+
+            <?php endif; ?>
+
+            <?php if(count($item_result) > 0): ?>
+
+            <h2 id="item-list-head">List items</h2>
+
+            <ul id="item-list">
+            <?php foreach( $item_result as $item): ?>
+                <li><h3><?php  echo $item['title']; ?></h3>
+                    <?php if($item['system_serial'] != 'NULL'): ?>
+                    <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/item-edit/index/id_list/<?php  echo $partialData['id_list']; ?>/id_item/<?php  echo $escape->escapeHtml($item['id_item']); ?>">edit</a>
+                    <?php endif; ?>
+
+                    <?php if(isset($item['attributes']) && is_array($item['attributes']) && (count($item['attributes']) > 0)): ?>
+                      <ul class="list_attributes_default">
+                      <?php foreach( $item['attributes'] as $attr ): ?>
+                          <?php if(!empty($attr['value'])): ?>
+                          <li><h4><?php echo $attr['info']['attribute_title']; ?>: <?php echo $escape->escapeHtml( $attr['value'] ); ?></h4></li>
+                          <?php endif; ?>
+                      <?php endforeach; ?>
+                      </ul>
+                    <?php endif; ?>
+
+                </li>
+            <?php endforeach; ?>
+            </ul>
+            
+            
+            
+          <?php  echo $this->paginationControl($this->paginator, 'Sliding', 
+	    	'paginator-slide'
+, array('id_list' => $this->id_list)); ?>
+            
+            <?php endif; ?>
+
+            <div id="import-export">
+
+                <h2><a href="#none" class="import">Import</a></h2> <h2><a href="#none" class="export">Export</a></h2>
+
+                <?php if(count($error) > 0): ?>
+                <div id="error" aria-live="rude">
+                <h2>Error:</h2>
+                <?php foreach($error as $error): ?>
+                    <h3><?php echo $escape->escapeHtml($error); ?></h3>
+                <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
+
+                <div id="export-menu" style="display: none" aria-live="rude">
+                    <p>Select the lists and click "Export".</p>
+                    <input type="button" value="Export" id="export-button" />
+                    <img id="loading" src="<?php echo $basePath; ?>/admin_media/images/loading-red.gif" alt="creating export...please wait" />
+                </div>
+
+            </div>
+
+        </form>
+
+        <div id="import"  style="display: none" aria-live="rude">
+
+            <form name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list/import/id_list/<?php echo $escape->escapeHtml($id_list); ?>" accept-charset="utf-8">
+            <input name="upload_file" type="file" size="50" maxlength="10000000" accept="text/*" />
+            <input type="submit" value="Upload File" />
+            </form>
+
+        </div>
+
+        <div id="export-file" aria-live="rude">
+            <h1 class="export-head">Export file</h1>
+        </div>
+
+    </div>
+
+    <div id="main_search" style="display:none">
+        <h1 id="page_head"><span id="head_search_type"></span> search result for: <span id="head_search_str"></span></h1>
+        <h3 id="close_search"><a href="#none">close search</a></h3>
+    </div>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_list_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

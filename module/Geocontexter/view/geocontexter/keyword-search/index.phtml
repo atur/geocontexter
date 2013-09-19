@@ -1,0 +1,62 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+    
+    $("a.edit").click(function(){
+        var id = $(this).attr("id").replace("id_","");     
+	window.opener.location.href = "<?php echo $this->baseUrl(); ?>/<?php echo $this->adminAreaToken; ?>/geocontexter/keyword-edit/index/id_keyword/" + id;
+
+    });
+    
+ });
+
+</script>
+
+    <h1 id="page_head"><?php echo ucfirst($this->type); ?> search result for: <?php echo $this->search; ?></h1>
+
+    <?php if(count($this->result) > 0): ?>
+ 
+    <?php echo $this->paginator; ?>
+ 
+    <ul id="node-list">
+    <?php foreach( $this->result as $val): ?>
+        <li <?php if($val['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($val['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($val['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>>
+            <?php if($val['system_serial'] != NULL): ?>
+            <h3><a href="#none" class="edit" id="id_<?php echo $val['id_keyword']; ?>" title="edit in background window"><?php  echo $val['title']; ?></a></h3> 
+            <?php else: ?>
+            <h3><?php  echo $val['title']; ?></h3>                         
+            <?php endif; ?>
+                        
+            <?php if(isset($val['lists']) && is_array($val['lists'])): ?>
+            <?php foreach($val['lists'] as $list): ?>
+            <p class="search_list_branch">Root/<?php  echo $list['branch']; ?></p>
+            <?php endforeach; ?>
+            <?php else: ?>
+            <p class="search_list_branch">Root/<?php  echo $val['branch']; ?></p>
+            <?php endif; ?>
+            <?php if(!empty($val['attributes'])): ?>
+            <?php if(count($val['attributes']) > 0): ?>
+            <ul class="list_attributes_default">
+            <?php foreach( $val['attributes'] as $attr): ?>
+              <li><h4><?php echo $attr['info']['attribute_title']; ?>: <?php echo $this->escape( $attr['value'] ); ?></h4></li>
+            <?php endforeach; ?>
+            </ul>
+            <?php endif; ?>
+            <?php endif; ?>
+            </li>
+    <?php endforeach; ?>
+    </ul>
+    
+    <?php echo $this->paginator; ?>
+    
+    <?php endif; ?>  
+
+
+
+

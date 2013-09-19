@@ -1,0 +1,14 @@
+<ul>
+<?php foreach($keyword_result as $keyword): ?>
+<?php if($id_value != $keyword['id_keyword']): ?>
+<li><span>+</span><input <?php if($input_type == 'checkbox'): ?>
+                           type="checkbox" name="_id_keyword[]"
+                         <?php else: ?>
+                           type="radio" name="_id_keyword"
+                         <?php endif; ?>
+                         value="<?php echo $keyword['id_keyword']; ?>" />
+                  <a href="#none" role="treeitem" aria-expanded="false" wairole="treeitem" class="opener" id="p_<?php echo $keyword['id_keyword']; ?>"><?php echo $keyword['title']; ?></a>
+</li>
+<?php endif; ?>
+<?php endforeach; ?>
+</ul>

@@ -1,0 +1,50 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Keyword</h1>
+
+    <ul id="node-branch" role="navigation" title="keyword branch">
+    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword/index/id_keyword/0">Root</a>/</li>
+    <?php foreach( $keyword_branch_result as $branch): ?>
+        <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword/index/id_keyword/<?php  echo $branch['id_keyword']; ?>"><?php  echo $escape->escapeHtml($branch['title']); ?></a>/</li>
+    <?php endforeach; ?>
+    </ul>
+
+    <div class="separation">&nbsp;</div>
+
+    <?php if(count($this->keyword_result) > 0): ?>
+
+    <ul id="node-list">
+    <?php foreach( $this->keyword_result as $keyword): ?>
+        <li <?php if($keyword['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($keyword['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($keyword['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>>
+
+            <a title="move keyword '<?php  echo $escape->escapeHtmlAttr($keyword['title']); ?>' up" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword/index/id_keyword/<?php  echo $keyword['id_parent']; ?>/moveUp/<?php  echo $keyword['id_keyword']; ?>">&uarr;</a>
+            <a title="move keyword '<?php  echo $escape->escapeHtmlAttr($keyword['title']); ?>' down" class="action" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword/index/id_keyword/<?php  echo $keyword['id_parent']; ?>/moveDown/<?php  echo $keyword['id_keyword']; ?>">&darr;</a>
+
+            <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword/index/id_keyword/<?php  echo $keyword['id_keyword']; ?>"><?php  echo $escape->escapeHtml($keyword['title']); ?></a>
+            <span class="additional-link-info">(<abbr title="Number of child keywords"><?php  echo $keyword['num_childs']; ?></abbr>)
+            <?php if($keyword['system_serial'] != NULL): ?>
+            <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword-edit/index/id_keyword/<?php  echo $keyword['id_keyword']; ?>">edit</a>
+            <?php endif; ?>
+            </span></li>
+    <?php endforeach; ?>
+    </ul>
+
+    <?php endif; ?>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_keyword_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

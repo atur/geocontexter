@@ -1,0 +1,8 @@
+<ul id="right_sub_navigaion" role="navigation">
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/index">Attribute</a></li>
+  <?php if($this->active_page != 'attrgroupmain'): ?>
+  <li class="select"><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-attributes/index/id_group/<?php echo $this->id_group; ?>">Back to attribute group</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-add/index/id_group/<?php echo $this->id_group; ?>">Add Attribute</a></li>
+  <?php endif; ?>
+</ul>

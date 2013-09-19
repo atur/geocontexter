@@ -1,0 +1,106 @@
+@charset "UTF-8";
+/**
+* "Yet Another Multicolumn Layout" - (X)HTML/CSS Framework
+*
+* (en) Uniform design of standard content elements
+* (de) Einheitliche Standardformatierungen für die wichtigten Inhalts-Elemente
+*
+* @copyright       Copyright 2005-2007, Dirk Jesse
+* @license         CC-A 2.0 (http://creativecommons.org/licenses/by/2.0/),
+*                  YAML-C (http://www.yaml.de/en/license/license-conditions.html)
+* @link            http://www.yaml.de
+* @package         yaml
+* @version         3.0.1
+* @revision        $Revision: 92 $
+* @lastmodified    $Date: 2007-07-15 10:26:40 +0200 (So, 15 Jul 2007) $
+* @appdef yaml
+*/
+
+@media all
+{
+    ul {
+        list-style-type: none;
+        color:#000000;
+        margin-left:50px;
+        margin-bottom:40px;
+    }
+
+    li {
+        list-style-type: none !important;
+    }
+
+    p {
+        margin-left:20px;
+        margin-bottom:20px;
+        font-size: 1.1em;
+    }
+
+    h2 {
+        font-size: 1.6em;
+        color:#000000;
+        margin-bottom:10px;
+        margin-left:20px;
+    }
+
+    li.setup_item_label {
+        font-size: 1.2em;
+        color:#000000;
+    }
+
+    li.setup_item_content {
+        margin-left:40px;
+        font-size: 1.2em;
+        margin-bottom:25px;
+        color:#000000;
+    }
+
+    li.setup_item_content input {
+        width:50%;
+    }
+
+    li.setup_item_content select {
+        width:50%;
+        font-size: 1.0em;
+    }
+
+    input {
+        padding:3px;
+        letter-spacing:3px;
+        font-size: 1em !important;
+    }
+
+    input#insertsamplecontent {
+        padding:10px;
+        width:1.5em;
+        height:1.5em;
+
+    }
+
+    input#submit {
+        padding:3px;
+        font-size: 1.2em;
+        width:10em;
+    }
+
+    #error {
+        margin-left:50px;
+        margin-bottom:20px;
+        padding:20px;
+        border: 5px #660000 solid;
+    }
+
+    #error ul {
+        list-style-type: circle;
+        color:#000000;
+    }
+
+    #error h1 {
+        font-size: 1.6em;
+    }
+
+    li.error {
+        font-size: 1.4em;
+        color:#660000;
+        margin-bottom:10px;
+    }
+}

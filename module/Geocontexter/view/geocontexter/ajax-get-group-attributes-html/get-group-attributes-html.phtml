@@ -1,0 +1,47 @@
+<?php $tabindex = 7; ?>
+<input type="hidden" name="attribute_id_group" id="attribute_id_group" value="<?php echo $this->escape($this->id_group); ?>" />
+<?php foreach($this->attribute_result as $attr): ?>
+<li class="item_label new"><h2><label for="<?php echo $this->escape($attr['attribute_name']); ?>" id="agroup<?php echo $tabindex; ?>"><?php echo $this->escape($attr['attribute_title']); ?><?php if(!empty($attr['attribute_unit'])): ?> (<?php echo $this->escape($attr['attribute_unit']); ?>)<?php endif; ?>:</label></h2></li>
+<li class="item_content new"><?php if($attr['attribute_type']=='varchar10000'): ?>
+  <textarea name="<?php echo $this->escape($attr['attribute_name']); ?>"
+      id="<?php echo $this->escape($attr['attribute_name']); ?>"
+      aria-labelledby="agroup<?php echo $tabindex; ?>"
+      <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+      tabindex="<?php echo $tabindex; ?>"
+      cols="50"
+      rows="5"><?php echo $this->escape($this->rel_attribute[$attr['attribute_name']]); ?></textarea>
+<?php elseif($attr['attribute_type']=='multi'): ?>
+  <textarea name="a_<?php echo $this->escape($attr['attribute_name']); ?>"
+         id="a_<?php echo $this->escape($attr['attribute_name']); ?>"
+         tabindex="<?php echo $tabindex; ?>"
+         <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $tabindex; ?>"
+         type="text"
+         size="40"
+         maxlength="1000"
+         value="<?php echo $this->escape(stripslashes(str_replace("NULL","",$attr['value']))); ?>" >
+         <?php foreach($attr['value'] as $value): ?>
+         <?php echo $value; ?>
+         <?php endforeach; ?>
+         </textarea>
+<?php elseif($attr['attribute_type']!='boolean'): ?>
+  <input name="<?php echo $this->escape($attr['attribute_name']); ?>"
+         id="<?php echo $this->escape($attr['attribute_name']); ?>"
+         tabindex="<?php echo $tabindex; ?>"
+         <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $tabindex; ?>"
+         type="text"
+         size="40"
+         maxlength="1000"
+         value="<?php echo $this->escape($this->rel_attribute[$attr['attribute_name']]); ?>" />
+<?php else: ?>
+  <input name="<?php echo $this->escape($attr['attribute_name']); ?>"
+         id="<?php echo $this->escape($attr['attribute_name']); ?>"
+         tabindex="<?php echo $tabindex; ?>"
+         <?php if($attr['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $tabindex; ?>"
+         type="checkbox"
+         value="<?php echo $this->escape($this->rel_attribute[$attr['attribute_name']]); ?>" />
+<?php endif; ?>
+</li><?php $tabindex++; ?>
+<?php endforeach; ?>

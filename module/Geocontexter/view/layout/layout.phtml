@@ -1,0 +1,148 @@
+<?php //echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle(' - Geocontexter Admin') ?>
+
+        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+
+	<!-- (en) Add your meta data here -->
+	<!-- (de) Fuegen Sie hier ihre Meta-Daten ein -->
+	<link href="<?php echo $basePath; ?>/admin_media/css/layout_3col_standard.css" rel="stylesheet" type="text/css"/>
+	<!--[if lte IE 7]>
+	<link href="<?php echo $basePath; ?>/admin_media/css/patches/patch_3col_standard.css" rel="stylesheet" type="text/css" />
+	<![endif]-->
+
+	<script type="text/javascript" src="<?php echo $basePath; ?>/library/jquery/jquery.js"></script>
+	<link type="text/css" href="<?php echo $basePath; ?>/library/jquery-ui/themes/redmond/jquery-ui.css" rel="stylesheet" />	
+	<script type="text/javascript" src="<?php echo $basePath; ?>/library/jquery-ui/ui/jquery-ui-all-in-one.js"></script>
+	<script type="text/javascript">
+
+	$(document).ready(function() {
+	    $('.admin_menu_link').toggle(function() {
+	      $('#admin_menu').show('slow');
+	      $('#main_content').hide();
+	      $('.admin_menu_link').html('Close Admin Menu');
+	    }, function() {
+		$('#admin_menu').hide();
+		$('#main_content').show('slow');
+		$('.admin_menu_link').html('Admin Menu');
+	    });
+	 });
+	</script>
+
+
+    </head>
+    
+<body>
+
+<div id="header">
+	<div class="page_margins">
+		<div class="page" role="banner">
+		  <div class="floatbox">
+			  <div id="topnav" role="navigation">
+				<!-- start: skip link navigation -->
+				<a class="skip" href="#navigation" title="skip link">skip to navigation</a><span class="hideme">.</span>
+				<a class="skip" href="#content" title="skip link">skip to content</a><span class="hideme">.</span>
+				<!-- end: skip link navigation -->
+				<span><?php if (isset($logged_user)): ?>
+				      <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/logout" title=" Logout ">Hi, <?php echo $logged_user->user_forename; ?> <?php echo $logged_user->user_lastname; ?></a> |
+				      <a href="#" class="admin_menu_link">Admin Menu</a> | 
+				      <?php endif; ?>
+				      <a href="<?php echo $basePath; ?>/">Public page</a></span>
+			  </div>
+			  <h1>GeoContexter <em>admin</em></h1>
+		  </div>
+		</div>
+	</div>
+</div>
+    
+<div id="main">
+
+	<!-- begin: main navigation #nav -->
+	    <div class="page_margins">
+	       <div class="floatbox">
+		<div id="admin_menu" style="display:none;">
+
+			<div>
+				<h2>Main admin menu</h2>
+				    <ul>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context">Contexts</a></li>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project">Projects</a></li>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list">Lists</a></li>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword">Keywords</a></li>
+				    </ul>
+				    <ul>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute">Attributes</a></li>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/user">Users</a></li>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/settings">Settings</a></li>
+				    </ul>
+			</div>
+
+			<!--
+			<div>
+				<h2>Modules menu</h2>
+				  <?php if(count($this->modules) > 1): ?>
+				    <ul>
+				    <?php foreach($this->modules as $key => $module): ?>
+				    <?php if($key != 'geocontexter'): ?>
+				    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/<?php //echo $module['module_folder']; ?>"><?php //echo $module['module_title']; ?></a></li>
+				    <?php endif; ?>
+				    <?php endforeach; ?>
+				    </ul>
+				  <?php else: ?>
+				      <p>no module</p>
+				  <?php endif; ?>  
+			</div>
+			-->
+		 </div>
+		</div>
+	    </div>
+	<!-- end: main navigation -->
+
+	<!-- begin: main content area #main -->
+	<div class="page_margins">
+	  <div class="page" id="main_content">
+
+
+
+		  <!-- begin: #col3 static column -->
+		  <div id="col3">
+
+			<div id="col3_content" class="clearfix">
+			  <!-- skiplink anchor: Content -->
+				<!--#######################-->
+				<!-- BEGIN: Module content -->
+				<!--#######################-->
+				<div id="module_content" role="main">
+				    <a name="content"></a>
+				    <?php echo $this->content; ?>
+				</div>
+				<!--#####################-->
+				<!-- END: Module content -->
+				<!--#####################-->
+			</div>
+
+			<div id="ie_clearing">&nbsp;</div>
+			<!-- End: IE Column Clearing -->
+		  </div>
+		  <!-- end: #col3 -->
+	  </div>
+	</div>
+	
+	<!-- end: #main -->
+
+	<!-- begin: #footer -->
+	<div id="footer">
+		<div class="page_margins">
+			<div class="page">
+			  GeoContexter ver.: <?php //echo $this->system_version; ?><br />Layout based on <a href="http://www.yaml.de/en">YAML</a>
+			</div>
+		</div>
+	</div>
+	<!-- end: #footer -->
+
+</div>
+</body>
+</html>

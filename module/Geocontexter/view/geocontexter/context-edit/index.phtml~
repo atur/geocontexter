@@ -1,0 +1,114 @@
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Edit Context</h1>
+
+    <ul id="node-branch" role="navigation">
+    <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context/index/id_context/0">Root</a>/</li>
+    <?php foreach( $context_branch_result as $branch): ?>
+        <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context/index/id_context/<?php  echo $branch['id_context']; ?>"><?php  echo $branch['title']; ?></a>/</li>
+    <?php endforeach; ?>
+    </ul>
+ 
+    <div class="separation">&nbsp;</div>
+
+    <?php if(count($error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($error as $_error): ?>
+            <h3><?php echo $_error; ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context-edit/update/id_context/<?php echo $id_context; ?>" accept-charset="utf-8">
+    <input type="hidden" name="id_context" value="<?php echo $id_context; ?>" />
+    <ul class="ul-form" role="slider">
+        <li class="item_label"><h2><label for="context_name" id="agn">Context title:</label></h2></li>
+        <li class="item_content">
+                <input aria-required="true"
+                       aria-labelledby="agn"
+                       name="context_name"
+                       id="context_name"
+                       tabindex="1"
+                       type="text"
+                       size="40"
+                       maxlength="255"
+                       value="<?php echo $escape->escapeHtmlAttr(preg_replace('/[[:cntrl:]]/','',$context_result['title'])); ?>" />
+        </li>
+        
+        <li class="item_label"><h2><label for="context_name" id="cpa">Context parent:</label></h2></li>
+        <li class="item_content">
+		<select name="id_parent" size="1" id="id_parent">
+		    <option value="0" role="treeitem" aria-level="0">Root</option>
+		    <?php foreach($context_tree_result as $val):  ?>
+		    <option lang="<?php echo $val['lang']; ?>" value="<?php echo $val['id_context']; ?>" <?php if(strcmp($val['id_context'],$context_result[0]['id_parent']) == 0 ){ echo 'selected="selected" aria-selected="true" class="selected"'; }?> role="treeitem" aria-level="<?php echo $val['level'] + 1; ?>" aria-expanded="true"><?php echo str_repeat('&nbsp;',($val['level']+1) * 4); echo $val['title']; ?></option>
+		    <?php endforeach; ?>
+		</select>
+        </li>
+        
+        <li class="item_label"><h2><label for="id_status" id="is">Context status:</label></h2></li>
+        <li class="item_content">
+                    <select name="id_status" id="id_status" size="1">
+                    <?php if(!isset($has_record_relation)): ?>
+                    <option value="0"<?php if($context_result[0]['id_status']==0): ?> selected="selected" class="selected"<?php endif; ?>>trash&nbsp;&nbsp;</option>                    
+                    <?php endif; ?>
+                    <option value="100"<?php if($context_result[0]['id_status']==100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+                    <option value="200"<?php if($context_result[0]['id_status']==200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+                    </select>
+        </li>
+        
+        <li class="item_label"><h2><label for="context_name" id="clang">Context language:</label></h2></li>
+        <li class="item_content">
+        <select name="lang" id="lang" size="1" lang="en">
+                <?php foreach($languages as $val):  ?>
+		<option value="<?php echo $escape->escapeHtmlAttr($val['lang']); ?>"<?php if($context_result[0]['lang']==$val['lang']): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['description']); ?></option>
+		<?php endforeach; ?>
+		</select>
+        </li>
+
+        <li class="item_label"><h2><label for="context_description" id="agd">Context description:</label></h2></li>
+        <li class="item_content">
+                <textarea name="context_description"
+                          id="context_description"
+                          aria-labelledby="agd"
+                          tabindex="2"
+                          cols="50"
+                          rows="5"><?php echo $escape->escapeHtml($context_result[0]['description']); ?></textarea>
+        </li>
+
+        <li class="item_label"><h2><label for="submit" id="sub">Update context or cancel:</label></h2></li>
+        <li class="item_content">
+            <input role="button"
+                   aria-labelledby="sub"
+                   tabindex="3"
+                   type="submit"
+                   name="add"
+                   id="submit"
+                   value="Update" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   tabindex="4"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   id="cancel"
+                   value="Cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_context_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

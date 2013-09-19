@@ -1,0 +1,262 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    $(".add_project_list").click(function(){
+      new_window = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/list-select/index/callback_num/<?php echo $this->project_lists_callback_number; ?>",
+                               "Lists",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+    $(".change_context_branch").click(function(){
+      new_window = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context-select/index/callback_num/<?php echo $this->project_context_callback_number; ?>",
+                               "Context",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+    $(".change_project_branch").click(function(){
+      new_window = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-select/index/callback_num/<?php echo $this->project_parent_callback_number; ?>",
+                               "Projects",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+    $(".add_keyword").click(function(){
+      new_kwindow = window.open("<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/keyword-select/index/callback_num/<?php echo $this->project_keyword_callback_number; ?>",
+                                "Keywords",
+                                "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_kwindow.focus();
+    });
+
+    $('.remove_project_list').toggle(function() {
+        $('.delete_project_list').show();
+    }, function() {
+        $('.delete_project_list').hide();
+    });
+
+    $('.remove_keyword').toggle(function() {
+        $('.delete_keyword').show();
+    }, function() {
+        $('.delete_keyword').hide();
+    });
+
+    $( "#date_project_start" ).datepicker({ changeYear: true,
+                                            dateFormat: 'yy-mm-dd',
+                                            duration: 'slow'});
+    $( "#date_project_end" ).datepicker({ changeYear: true,
+                                          dateFormat: 'yy-mm-dd',
+                                          duration: 'slow'});
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Edit Project "<?php echo $escape->escapeHtml($this->project_result['title']); ?>"</h1>
+
+    <?php if(count($this->error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($this->error as $error): ?>
+            <h3><?php echo $escape->escapeHtml($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-edit/update" accept-charset="utf-8">
+
+    <input type="hidden" name="id_project" value="<?php echo $this->project_result['id_project']; ?>" />
+    <input type="hidden" name="_id_parent" value="<?php echo $this->project_result['id_parent']; ?>" />
+
+    <input type="hidden" id="class_name" name="class_name" value="" />
+
+    <ul class="ul-form">
+        <li class="item_label"><h2><label for="project_name" id="agn">Project title:</label></h2></li>
+        <li class="item_content">
+                <input aria-required="true"
+                       aria-labelledby="agn"
+                       name="project_title"
+                       id="project_title"
+                       tabindex="1"
+                       type="text"
+                       size="40"
+                       maxlength="255"
+                       value="<?php echo $escape->escapeHtmlAttr($this->project_result['title']); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label for="list_id_parent" id="cpa">Project branch:</label></h2></li>
+        <li class="item_content">
+            <div class="node-branch-tree-content">
+            <ul id="node-branch-tree">
+            <li>
+            Root/<?php foreach( $this->project_branch_result as $project): ?><?php  echo $escape->escapeHtml($project['title']); ?>/<?php endforeach; ?>
+            </li>
+            </ul>
+            </div>
+
+            <a href="#none" class="change_project_branch">change project branch</a>
+        </li>
+
+        <li class="item_label"><h2><label for="list_id_parent" id="cpa">Project context:</label></h2></li>
+        <li class="item_content">
+            <div class="node-branch-tree-content">
+            <ul id="node-branch-tree">
+            <li>
+            <?php foreach( $this->result_context as $context): ?><?php  echo $escape->escapeHtml($context['title']); ?>/<?php endforeach; ?>
+            </li>
+            </ul>
+            </div>
+
+            <a href="#none" class="change_context_branch">change context</a>
+        </li>
+
+        <li class="item_label"><h2><label for="project_controller" id="cpa">Project public controller:</label></h2></li>
+        <li class="item_content">
+
+            <select name="project_controller" id="project_controller" size="1" tabindex="2">
+
+              <option value="">none&nbsp;&nbsp;</option>
+              <?php foreach( $this->result_controllers['controller_dir'] as $directory): ?>
+              <option value="<?php  echo $directory; ?>"<?php if($this->project_result['controller']==$directory): ?> selected="selected" class="selected"<?php endif; ?>><?php  echo $escape->escapeHtml($directory); ?>&nbsp;&nbsp;</option>
+              <?php endforeach; ?>
+
+            </select>
+
+        </li>
+
+        <li class="item_label"><h2><label for="project_date" id="agdate">Project start/end date:</label></h2></li>
+        <li class="item_content">
+                <input aria-labelledby="agdate"
+                       name="date_project_start"
+                       id="date_project_start"
+                       tabindex="1"
+                       type="text"
+                       title="Project start date"
+                       size="20"
+                       maxlength="20"
+                       value="<?php echo $escape->escapeHtmlAttr(preg_replace('/[[:cntrl:]]/','',$this->project_result['date_project_start'])); ?>" />
+
+                <input name="date_project_end"
+                       id="date_project_end"
+                       tabindex="1"
+                       type="text"
+                       title="Project end date"
+                       size="20"
+                       maxlength="20"
+                       value="<?php echo $escape->escapeHtmlAttr(preg_replace('/[[:cntrl:]]/','',$this->project_result['date_project_end'])); ?>" />
+        </li>
+
+        <li class="item_label"><h2><label>Project lists:</label></h2></li>
+        <li class="item_content">
+            <div class="node-branch-tree-content">
+            <ul id="node-branch-tree">
+            <?php foreach( $this->lists_result as $list): ?>
+                <li><input type="checkbox"
+                                  style="display:none;"
+                                  class="delete_project_list"
+                                  name="delete_id_list[]"
+                                  value="<?php echo $escape->escapeHtmlAttr($list['id_list']); ?>"
+                                  title="check to delete" /> <?php  echo $escape->escapeHtml($list['branch']); ?>/</li>
+            <?php endforeach; ?>
+            </ul>
+            </div>
+
+            <a href="#none" class="add_project_list">add project list</a>
+            <?php if(count($this->lists_result) > 0): ?>
+              &nbsp;&nbsp;&nbsp;&nbsp;<a href="#none" class="remove_project_list">remove project list</a>
+            <?php endif; ?>
+        </li>
+
+        <li class="item_label"><h2><label>Project users:</label></h2></li>
+        <li class="item_content">
+          <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-users/index/id_project/<?php echo $this->project_result['id_project']; ?>">open project user page</a>
+        </li>
+
+        <li class="item_label"><h2><label>Project geographic area:</label></h2></li>
+        <li class="item_content">
+          <a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/project-geometry/index/id_project/<?php echo $this->project_result['id_project']; ?>">open project geometry page</a>
+        </li>
+
+        <li class="item_label"><h2><label for="project_id_status" id="is">Project status:</label></h2></li>
+        <li class="item_content">
+                    <select name="project_id_status" id="project_id_status" size="1">
+                    <option value="0"<?php if($this->project_result['id_status']==0): ?> selected="selected" class="selected"<?php endif; ?>>trash&nbsp;&nbsp;</option>
+                    <option value="100"<?php if($this->project_result['id_status']==100): ?> selected="selected" class="selected"<?php endif; ?>>inactive&nbsp;&nbsp;</option>
+                    <option value="200"<?php if($this->project_result['id_status']==200): ?> selected="selected" class="selected"<?php endif; ?>>active&nbsp;&nbsp;</option>
+                    <option value="300"<?php if($this->project_result['id_status']==300): ?> selected="selected" class="selected"<?php endif; ?>>restricted to registered users&nbsp;&nbsp;</option>
+                    <option value="400"<?php if($this->project_result['id_status']==400): ?> selected="selected" class="selected"<?php endif; ?>>restricted to registered project users&nbsp;&nbsp;</option>
+                    </select>
+        </li>
+
+        <li class="item_label"><h2><label for="project_lang" id="clang">Project language:</label></h2></li>
+        <li class="item_content">
+        <select name="project_lang" id="project_lang" size="1" lang="en" tabindex="4">
+                <?php foreach($this->languages as $val):  ?>
+        <option value="<?php echo $escape->escapeHtmlAttr($val['lang']); ?>"<?php if($this->project_result['lang']==$val['lang']): ?> selected="selected" class="selected"<?php endif; ?>><?php echo $escape->escapeHtml($val['description']); ?></option>
+        <?php endforeach; ?>
+        </select>
+        </li>
+
+        <li class="item_label"><h2><label for="project_description" id="agd">Project description:</label></h2></li>
+        <li class="item_content">
+                <textarea name="project_description"
+                          id="project_description"
+                          aria-labelledby="agd"
+                          cols="50"
+                          rows="8"><?php echo $escape->escapeHtml($this->project_result['description']); ?></textarea>
+        </li>
+
+        <li class="item_label"><h2><label for="item_id_parent" id="cpa">Project keywords:</label></h2></li>
+        <li class="item_content">
+            <div class="node-branch-tree-content">
+            <ul id="node-branch-tree">
+            <?php foreach( $this->keywords_result as $keyword): ?>
+                <li><input type="checkbox" style="display:none;" class="delete_keyword" name="delete_id_keyword[]" value="<?php echo $keyword['id_keyword']; ?>" /> <?php  echo $escape->escapeHtml($keyword['branch']); ?>/</li>
+            <?php endforeach; ?>
+            </ul>
+            </div>
+
+            <a href="#none" class="add_keyword">add keyword</a>
+            <?php if(count($this->keywords_result) > 0): ?>
+              &nbsp;&nbsp;&nbsp;&nbsp; <a href="#none" class="remove_keyword">remove keyword</a>
+            <?php endif; ?>
+        </li>
+
+    </ul>
+
+    <ul class="ul-form">
+        <li class="item_label"><h2><label for="submit" id="sub">Update project or cancel:</label></h2></li>
+        <li class="item_content">
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="add"
+                   id="submit"
+                   value="Submit" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   id="cancel"
+                   value="Cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+      
+      <?php echo $this->partial('layout/_project_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>
+
+

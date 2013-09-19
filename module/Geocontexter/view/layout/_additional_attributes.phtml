@@ -1,0 +1,74 @@
+<?php $_tabindex = $tabindex; ?>
+<input type="hidden" name="attribute_id_group" id="id_attribute_group" value="<?php echo $escape->escapeHtmlAttr($id_attribute_group); ?>" />
+
+<ul class="ul-form">
+
+<?php foreach($attributes as $attr): ?>
+<li class="item_label new">
+  <h2>
+    <label for="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>" id="agroup<?php echo $_tabindex; ?>">
+    <?php echo $escape->escapeHtml($attr['info']['attribute_title']); ?>
+    <?php if(!empty($attr['info']['attribute_unit'])): ?> (<?php echo $escape->escapeHtml($attr['info']['attribute_unit']); ?>)<?php endif; ?>
+    <?php if($attr['info']['multi_value']=='true'): ?> (multi value | one in line)<?php endif; ?>:
+    </label>
+  </h2>
+</li>
+<li class="item_content new">
+
+<?php if($attr['info']['multi_value']=='true'): ?>
+
+  <textarea name="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+         id="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+         tabindex="<?php echo $_tabindex; ?>"
+         <?php if($attr['info']['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $_tabindex; ?>"
+         type="text"
+         size="40"
+         rows="3"><?php if($attr['value'] != NULL): ?><?php foreach($attr['value'] as $value): ?><?php echo $escape->escapeHtml($value) . "\r\n"; ?><?php endforeach; ?><?php endif; ?></textarea>
+
+<?php elseif($attr['info']['attribute_html_type']=='textarea'): ?>
+
+  <textarea name="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+      id="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+      aria-labelledby="agroup<?php echo $_tabindex; ?>"
+      <?php if($attr['info']['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+      tabindex="<?php echo $_tabindex; ?>"
+      cols="50"
+      rows="5"><?php echo $escape->escapeHtml(stripslashes(str_replace("NULL","",$attr['value']))); ?></textarea>
+
+<?php elseif($attr['info']['attribute_html_type'] == 'radio'): ?>
+
+  <input class="radio" name="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+         id="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+         tabindex="<?php echo $_tabindex; ?>"
+         <?php if($attr['info']['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $_tabindex; ?>"
+         type="radio"
+         <?php if($attr['value']=='true'): ?>checked="checked"<?php endif; ?>
+         value="true" /> true &nbsp;&nbsp;&nbsp;&nbsp;
+  <input class="radio" name="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+           id="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+           tabindex="<?php echo $_tabindex; ?>"
+           <?php if($attr['info']['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+           aria-labelledby="agroup<?php echo $_tabindex; ?>"
+           type="radio"
+           <?php if($attr['value']=='false'): ?>checked="checked"<?php endif; ?>
+           value="false" /> false
+
+<?php else: ?>
+
+  <input name="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+         id="a_<?php echo $escape->escapeHtmlAttr($attr['info']['attribute_name']); ?>"
+         tabindex="<?php echo $_tabindex; ?>"
+         <?php if($attr['info']['attribute_required']=='true'): ?>aria-required="true"<?php endif; ?>
+         aria-labelledby="agroup<?php echo $_tabindex; ?>"
+         type="text"
+         size="40"
+         maxlength="1000"
+         value="<?php echo $escape->escapeHtmlAttr(stripslashes(str_replace("NULL","",$attr['value']))); ?>" />
+
+
+<?php endif; ?>
+</li><?php $_tabindex++; ?>
+<?php endforeach; ?>
+</ul>

@@ -1,0 +1,265 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+   
+    /* -- ask for deleting attribute group -- */
+    
+    $("a.attr_group_delete").click(function(event)
+    {
+        title = $(this).parent().parent().children("a:first").html();
+        check = confirm("Delete group '" + title + "'");
+        if (check == false)
+        {
+            event.preventDefault();
+            return;
+        } 
+    });
+   
+    /* -- show export form -- */
+    
+    $("a.export").click(function()
+    {
+        $('div#import').hide('slow');
+        $('#export-menu').toggle('slow');
+        $('input.sel-group').toggle();
+        $('#export-file').hide('slow');
+        $('#export-file a').remove();
+    });
+    
+    /* -- show import form -- */
+    
+    $("a.import").click(function()
+    {
+        $('input.sel-group').hide();
+        $('#export-menu').hide('slow');
+        $('div#import').toggle('slow');
+    });
+    
+    /* -- hide loading image and export file if present -- */
+    
+        $('#loading').hide();
+        $('#export-file').hide();
+        
+    /* -- handle export -- */
+    
+    $("#export-button").click(function(){
+    
+        var id_groups = [];
+        
+            /* -- load all checked id_groups in array -- */
+        $('#upload input:checked').each(function()
+        {
+            id_groups.push($(this).val());
+        });
+
+        if(id_groups.length == 0)
+        {
+            alert('no attribute group selected');
+            return;
+        }
+
+        $.ajax({
+          type: "POST",
+          dataType: 'json',
+          url: "<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-export-json",
+          data: ({id_groups : id_groups}),
+          success: function(data) {
+             if(!data)
+             {
+                html = '<p>Error creating export file:</p>';
+             }              
+             else if(data['error'])
+             {
+            html = '<p>Error creating export file: ' + data['error'] + '</p>';
+             }
+             else
+             {
+            html = '<a href="<?php echo $basePath; ?>/data/export/'+data['file']+'">'+data['file']+'</a>';
+             }
+
+             /* -- hide export form -- */
+             $('#export-menu').toggle('slow');
+             $('input.sel-group').toggle();
+             
+             /* -- show export file -- */
+             $(html).insertAfter('.export-head');
+             $('#export-file').show('slow');
+          },
+          error: function(data) {
+             html = '<p>Error creating export file</p>';
+             $('#export-menu').toggle('slow');
+             $('input.sel-group').toggle();
+             
+             $(html).insertAfter('.export-head');
+             $('#export-file').show('slow');
+          }
+        });
+    });
+    
+    $('')
+        $('#loading')
+        .ajaxStart(function() {
+        $(this).show();
+        }).ajaxStop(function() {
+        $(this).hide();
+        });
+    
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Areas of attribute groups</h1>
+
+    <div>&nbsp;</div>
+    
+    <form name="upload" id="upload" enctype="multipart/form-data" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/export" accept-charset="utf-8">
+
+    <h2 class="attribute-group-list-header">Record</h2>
+
+    <?php if(count($gc_record_value_atttribute_groups) > 0): ?>
+ 
+    <ul class="attribute-group-list">
+    <?php foreach( $gc_record_value_atttribute_groups as $group): ?>
+        <li<?php if($group['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($group['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($group['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>><input class="sel-group" style="display: none" name="id_group_export[]" type="checkbox" value="<?php  echo $group['id_group']; ?>" /> <a title="show group attributes" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attributeGroupAttributes/index/id_group/<?php  echo $group['id_group']; ?>"><?php  echo $group['title']; ?></a>
+            <?php if($group['system_serial'] != 'NULL'): ?>
+            <span class="action">(<a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-edit/index/id_group/<?php  echo $group['id_group']; ?>">edit</a>)</span>
+            <?php endif; ?>
+            <?php if($group['has_relation'] == 0): ?>
+            <span class="action">(<a class="attr_group_delete" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/delete/id_group/<?php  echo $group['id_group']; ?>">delete</a>)</span>
+            <?php endif; ?></li>
+    <?php endforeach; ?>
+    </ul>
+    <?php else: ?>
+    <p class="not-yet-defined">Attribute group not yet defined</p>
+    <?php endif; ?>
+    
+    <h2 class="attribute-group-list-header">List</h2>
+
+    <?php if(count($gc_list_item_atttribute_groups) > 0): ?>
+ 
+    <ul class="attribute-group-list">
+    <?php foreach( $gc_list_item_atttribute_groups as $group): ?>
+        <li<?php if($group['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($group['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($group['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>><input class="sel-group" style="display: none" name="id_group_export[]" type="checkbox" value="<?php  echo $group['id_group']; ?>" /> <a title="show group attributes" href="<?php echo $basePath; ?>/<?php echo $this->adminAreaToken; ?>/attributeGroupAttributes/index/id_group/<?php  echo $group['id_group']; ?>"><?php  echo $group['title']; ?></a>
+            <?php if($group['system_serial'] != 'NULL'): ?>
+            <span class="action">(<a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-edit/index/id_group/<?php  echo $group['id_group']; ?>">edit</a>)</span>
+            <?php endif; ?>
+            <?php if($group['has_relation'] == 0): ?>
+            <span class="action">(<a class="attr_group_delete" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/delete/id_group/<?php  echo $group['id_group']; ?>">delete</a>)</span>
+            <?php endif; ?></li>
+    <?php endforeach; ?>
+    </ul>
+    <?php else: ?>
+    <p class="not-yet-defined">Attribute group not yet defined</p>
+    <?php endif; ?>
+    
+    <h2 class="attribute-group-list-header">Item</h2>
+
+    <?php if(count($gc_item_atttribute_groups) > 0): ?>
+ 
+    <ul class="attribute-group-list">
+    <?php foreach( $gc_item_atttribute_groups as $group): ?>
+        <li <?php if($group['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($group['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($group['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>><input class="sel-group" style="display: none" name="id_group_export[]" type="checkbox" value="<?php  echo $group['id_group']; ?>" /> <a title="show group attributes" href="<?php echo $basePath; ?>/<?php echo $this->adminAreaToken; ?>/attributeGroupAttributes/index/id_group/<?php  echo $group['id_group']; ?>"><?php  echo $group['title']; ?></a>
+            <?php if($group['system_serial'] != 'NULL'): ?>
+            <span class="action">(<a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-edit/index/id_group/<?php  echo $group['id_group']; ?>">edit</a>)</span>
+            <?php endif; ?>
+            <?php if($group['has_relation'] == 0): ?>
+            <span class="action">(<a class="attr_group_delete" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/delete/id_group/<?php  echo $group['id_group']; ?>">delete</a>)</span>
+            <?php endif; ?></li>
+    <?php endforeach; ?>
+    </ul>
+    <?php else: ?>
+    <p class="not-yet-defined">Attribute group not yet defined</p>
+    <?php endif; ?>
+    
+    <h2 class="attribute-group-list-header">Keyword</h2>
+
+    <?php if(count($gc_keyword_atttribute_groups) > 0): ?>
+ 
+    <ul class="attribute-group-list">
+    <?php foreach( $gc_keyword_atttribute_groups as $group): ?>
+        <li<?php if($group['id_status']==0): ?>
+            class="status-trash" title="trash"
+            <?php elseif($group['id_status']==100): ?>
+            class="status-inactive" title="inactive"
+            <?php elseif($group['id_status']==200): ?>
+            class="status-active" title="active"
+            <?php endif; ?>><input class="sel-group" style="display: none" name="id_group_export[]" type="checkbox" value="<?php  echo $group['id_group']; ?>" /> <a title="show group attributes" href="<?php echo $basePath; ?>/<?php echo $this->adminAreaToken; ?>/attributeGroupAttributes/index/id_group/<?php  echo $group['id_group']; ?>"><?php  echo $group['title']; ?></a> 
+            <?php if($group['system_serial'] != 'NULL'): ?>
+            <span class="action">(<a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute-group-edit/index/id_group/<?php  echo $group['id_group']; ?>">edit</a>)</span>
+            <?php endif; ?>
+            <?php if($group['has_relation'] == 0): ?>
+            <span class="action">(<a class="attr_group_delete" href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/delete/id_group/<?php  echo $group['id_group']; ?>">delete</a>)</span>
+            <?php endif; ?></li>
+    <?php endforeach; ?>
+    </ul>
+    <?php else: ?>
+    <p class="not-yet-defined">Attribute group not yet defined</p>
+    <?php endif; ?>
+    
+    <div id="import-export">
+    
+        <h2><a href="#none" class="import">Import</a></h2> <h2><a href="#none" class="export">Export</a></h2>
+
+        <?php if(count($error) > 0): ?>
+        <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($error as $err): ?>
+            <h3><?php echo $this->escape($err); ?></h3>
+        <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+        
+        <div id="export-menu" style="display: none" aria-live="rude">
+            <p>Select the attribute groups and click "Export".</p>
+            <input type="button" value="Export" id="export-button" /> 
+            <img id="loading" src="<?php echo $basePath; ?>/admin_media/images/loading-red.gif" alt="creating export...please wait" />
+        </div>
+
+    </div>
+    
+    </form>
+    
+    <div id="import"  style="display: none" aria-live="rude">
+
+        <form name="upload-form" id="upload-form" enctype="multipart/form-data" method="post" action="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/attribute/upload" accept-charset="utf-8">
+        <input name="upload_file" type="file" size="50" maxlength="10000000" accept="text/*" />
+        <input type="submit" value="Upload File" />
+        </form>
+
+
+
+    </div>
+
+    <div id="export-file" aria-live="rude">
+        <h1 class="export-head">Export file</h1>
+    </div>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php $partialData['basePath'] = $basePath; $partialData['adminAreaToken'] = $adminAreaToken; ?>
+  
+      <?php echo $this->partial('layout/_attribute_group_navigation.phtml', 
+                                $partialData); ?>
+  </div>
+</div>

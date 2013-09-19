@@ -1,0 +1,194 @@
+<script type="text/javascript">
+
+ $(document).ready(function() {
+
+    $(".add_project_user").click(function(){
+      new_window = window.open("<?php echo $this->baseUrl(); ?>/<?php echo $this->adminPageToken; ?>/geocontexter/user-select/index/callback_num/<?php echo $this->project_users_callback_number; ?>",
+                               "Users",
+                               "width=500,height=400,left=50,top=50,menubar=no,location=no,resizable=yes,scrollbars=yes,toolbar=no");
+      new_window.focus();
+    });
+
+
+    $('.remove_project_user').toggle(function() {
+      $('.delete_project_user').show();
+    }, function() {
+      $('.delete_project_user').hide();
+    });
+ });
+
+</script>
+
+<div class="subcolumns">
+  <div class="c75l">
+
+    <h1 id="page_head">Project geometries</h1>
+
+    <?php if(count($this->error) > 0): ?>
+    <div id="error" aria-live="rude">
+        <h2>Error:</h2>
+        <?php foreach($this->error as $error): ?>
+            <h3><?php echo $this->escape($error); ?></h3>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <form name="setup" id="setup" method="post" action="<?php echo $this->baseUrl(); ?>/<?php echo $this->adminAreaToken; ?>/geocontexter/project-geometry/update" accept-charset="utf-8">
+
+    <input type="hidden" name="id_project" value="<?php echo $this->project_result['id_project']; ?>" />
+
+    <ul class="project_geometries">
+
+        <?php if(count($this->result_project_geometry) > 0): ?>
+
+        <li class="project_geometries_label"><h2><label>Project geometries:</label></h2></li>
+        <li class="project_geometries_content">
+            <div class="node-branch-tree-content">
+
+            <?php if(!isset($this->update)): ?>
+
+            <?php foreach($this->result_project_geometry as $geometry): ?>
+                <input type="hidden"
+                       name="id_project_geometry[]"
+                       value="<?php echo $this->escape($geometry['id_project_geometry']); ?>" />
+                <ul class="project_geometries_entry">
+                <li><h3>Geometry polygon</h3>
+                    <textarea name="project_geometry[]"><?php echo $this->escape($geometry['original_geom_polygon']); ?></textarea>
+                <input type="checkbox"
+                       name="id_project_geometry_delete[]"
+                       class="project_geometries_checkbox"
+                       title="check to delete this geometry"
+                       value="<?php echo $this->escape($geometry['id_project_geometry']); ?>" />
+                </li>
+                <li><h3>EPSG (SRID)</h3>
+                    <input type="text"
+                           class="project_geometries_srid"
+                           name="project_geometry_srid[]"
+                           value="<?php echo $this->escape($geometry['original_geom_srid']); ?>" />
+                </li>
+                <li><h3>Geometry title</h3>
+                    <input type="text"
+                           name="project_geometry_title[]"
+                           class="project_geometries_text"
+                           value="<?php echo $this->escape($geometry['title']); ?>"/>
+                </li>
+                <li><h3>Geometry description</h3>
+                    <textarea name="project_geometry_description[]"><?php echo $this->escape($geometry['description']); ?></textarea>
+                </li>
+                </ul>
+            <?php endforeach; ?>
+
+            <?php else: ?>
+            <? $x = 0; ?>
+            <?php foreach($this->id_project_geometries as $id_geometry): ?>
+                <input type="hidden"
+                       name="id_project_geometry[]"
+                       value="<?php echo $this->escape($id_geometry); ?>" />
+                <ul class="project_geometries_entry">
+                <li><h3>Geometry polygon</h3>
+                    <textarea name="project_geometry[]"><?php echo $this->escape($this->update_project_geometry_polygon[$x]); ?></textarea>
+                <input type="checkbox"
+                       name="id_project_geometry_delete[]"
+                       class="project_geometries_checkbox"
+                       title="check to delete this geometry"
+                       value="<?php echo $this->escape($id_geometry); ?>" />
+                </li>
+                <li><h3>EPSG (SRID)</h3>
+                    <input type="text"
+                           class="project_geometries_srid"
+                           name="project_geometry_srid[]"
+                           value="<?php echo $this->escape($this->update_project_geometry_srid[$x]); ?>" />
+                </li>
+                <li><h3>Geometry title</h3>
+                    <input type="text"
+                           name="project_geometry_title[]"
+                           class="project_geometries_text"
+                           value="<?php echo $this->escape($this->update_project_geometry_title[$x]); ?>"/>
+                </li>
+                <li><h3>Geometry description</h3>
+                    <textarea name="project_geometry_description[]"><?php echo $this->escape($this->update_project_geometry_description[$x]); ?></textarea>
+                </li>
+                </ul>
+            <? $x++; ?>
+            <?php endforeach; ?>
+
+            <?php endif; ?>
+
+            </div>
+        </li>
+
+        <?php endif; ?>
+
+        <li class="project_geometries_label"><h2><label>Add new project geometry:</label></h2></li>
+        <li class="project_geometries_content">
+            <div class="node-branch-tree-content">
+
+                <ul id="node-branch-tree">
+                  <li><h3>Geometry polygon</h3>
+                      <textarea name="new_project_geometry_polygon"><?php echo str_replace(",",",\n",$this->escape($this->new_project_geometry_polygon)); ?></textarea>
+                  </li>
+                  <li><h3>EPSG (SRID)</h3>
+                      <input type="text"
+                             name="new_project_geometry_srid"
+                             class="project_geometries_srid"
+                             value="<?php echo $this->escape($this->new_project_geometry_srid); ?>" />
+                  </li>
+                  <li><h3>Geometry title</h3>
+                      <input type="text"
+                             name="new_project_geometry_title"
+                             class="project_geometries_text"
+                             value="<?php echo $this->escape($this->new_project_geometry_title); ?>"/>
+                  </li>
+                  <li><h3>Geometry description</h3>
+                      <textarea name="new_project_geometry_description"><?php echo $this->escape($this->new_project_geometry_description); ?></textarea>
+                  </li>
+                </ul>
+
+            </div>
+        </li>
+    </ul>
+
+    <ul class="project_geometries">
+        <li class="project_geometries_label"><h2><label for="submit" id="sub">Apply</label></h2></li>
+        <li class="project_geometries_content">
+
+        <?php if(count($this->result_project_geometry) > 0): ?>
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="update"
+                   id="submit"
+                   value="Update geometries" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <?php endif; ?>
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="add_project_geometry"
+                   id="add_project_geometry"
+                   value="Add new geometry" />
+
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+            <input role="button"
+                   aria-labelledby="sub"
+                   type="submit"
+                   name="cancel"
+                   id="cancel"
+                   value="cancel" />
+        </li>
+    </ul>
+
+    </form>
+
+  </div>
+  <div class="c25r right_navigation">
+      <?php echo $this->partial('_project_navigation.phtml',
+                                'geocontexter',
+                                $this->partialData); ?>
+  </div>
+</div>
+
+

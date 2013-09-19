@@ -1,0 +1,12 @@
+<ul id="right_sub_navigaion" role="navigation">
+  <?php if($active_page == 'main'): ?>
+  <li class="select">Context</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context/index/id_context/<?php echo $id_context; ?>">Context</a></li>
+  <?php endif; ?>
+  <?php if($this->active_page == 'add'): ?>
+  <li class="select">Add Context</li>
+  <?php else: ?>
+  <li><a href="<?php echo $basePath; ?>/<?php echo $adminAreaToken; ?>/context-add/index/id_context/<?php echo $id_context; ?>">Add Context</a></li>
+  <?php endif; ?>
+</ul>
